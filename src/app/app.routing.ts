@@ -84,7 +84,7 @@ export const appRoutes: Route[] = [
                     {path: 'contacts', loadChildren: () => import('app/modules/admin/apps/contacts/contacts.module').then(m => m.ContactsModule)},
                     {path: 'ecommerce', loadChildren: () => import('app/modules/admin/apps/ecommerce/ecommerce.module').then(m => m.ECommerceModule)},
 
-                    {path: 'customer', loadChildren: () => import('app/modules/admin/apps/customers/customer.module').then(m => m.CustomerModule)},
+                    {path: 'customer', loadChildren: () => import('app/modules/admin/customers/customer.module').then(m => m.CustomerModule)},
                     {path: 'portal-user', loadChildren: () => import('app/modules/admin/apps/users/portal-users.module').then(m => m.PortalUsersModule)},
 
                     {path: 'file-manager', loadChildren: () => import('app/modules/admin/apps/file-manager/file-manager.module').then(m => m.FileManagerModule)},

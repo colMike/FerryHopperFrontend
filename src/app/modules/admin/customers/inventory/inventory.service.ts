@@ -5,7 +5,7 @@ import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import {
     InventoryPagination,
     CustomerObject
-} from 'app/modules/admin/apps/customers/inventory/inventory.types';
+} from 'app/modules/admin/customers/inventory/inventory.types';
 
 @Injectable({
     providedIn: 'root'

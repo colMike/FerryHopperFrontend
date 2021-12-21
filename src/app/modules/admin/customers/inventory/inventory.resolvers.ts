@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { InventoryService } from 'app/modules/admin/apps/customers/inventory/inventory.service';
+import { InventoryService } from 'app/modules/admin/customers/inventory/inventory.service';
 import {
     CustomerObject,
     InventoryPagination,
     InventoryProduct
-} from 'app/modules/admin/apps/customers/inventory/inventory.types';
+} from 'app/modules/admin/customers/inventory/inventory.types';
 
 @Injectable({
     providedIn: 'root'

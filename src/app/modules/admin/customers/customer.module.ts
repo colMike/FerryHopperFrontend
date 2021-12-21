@@ -14,9 +14,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
-import { InventoryComponent } from 'app/modules/admin/apps/customers/inventory/inventory.component';
-import { InventoryListComponent } from 'app/modules/admin/apps/customers/inventory/list/inventory.component';
-import { customerRoutes } from 'app/modules/admin/apps/customers/customer.routing';
+import { InventoryComponent } from 'app/modules/admin/customers/inventory/inventory.component';
+import { InventoryListComponent } from 'app/modules/admin/customers/inventory/list/inventory.component';
+import { customerRoutes } from 'app/modules/admin/customers/customer.routing';
 
 @NgModule({
     declarations: [
