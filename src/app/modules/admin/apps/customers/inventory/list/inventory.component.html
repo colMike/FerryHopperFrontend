@@ -42,7 +42,7 @@
 
         <!-- Products list -->
         <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
-            <ng-container *ngIf="(products$ | async) as products">
+            <ng-container *ngIf="(customers$ | async) as products">
                 <ng-container *ngIf="products.length > 0; else noProducts">
                     <div class="grid">
                         <!-- Header -->
@@ -51,67 +51,77 @@
                             matSort
                             matSortDisableClear>
                             <div
-                                class="hidden md:block"
-                                [mat-sort-header]="'sku'">
+                                class="hidden md:block truncate"
+                                [mat-sort-header]="'id'">
                                 ID.
                             </div>
                             <div
-                                class="hidden sm:block"
-                                [mat-sort-header]="'name'">
+                                class="hidden md:block truncate"
+                                [mat-sort-header]="'firstName'">
                                 First Name
                             </div>
                             <div
-                                class="hidden sm:block"
-                                [mat-sort-header]="'name'">
+                                class="hidden md:block truncate"
+                                [mat-sort-header]="'middleName'">
                                 Second Name
                             </div>
                             <div
-                                class="hidden lg:block"
-                                [mat-sort-header]="'name'">
+                                class="hidden md:block truncate"
+                                [mat-sort-header]="'lastName'">
+                                Last Name
+                            </div>
+
+                            <div
+                                class="hidden md:block truncate"
+                                [mat-sort-header]="'email'">
                                 Email
                             </div>
                             <div
-                                class="hidden lg:block"
+                                class="hidden md:block items-center content-center"
                                 [mat-sort-header]="'active'">
                                 Active
                             </div>
-                            <div class="hidden sm:block">Details</div>
+                            <div class="hidden md:block items-center content-center">Details</div>
                         </div>
                         <!-- Rows -->
-                        <ng-container *ngIf="(products$ | async) as products">
-                            <ng-container *ngFor="let product of products; trackBy: trackByFn">
+                        <ng-container *ngIf="(customers$ | async) as customers">
+                            <ng-container *ngFor="let customer of customers; trackBy: trackByFn">
                                 <div class="inventory-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b">
 
 
                                     <!-- SKU -->
                                     <div class="hidden md:block truncate">
-                                        {{product.sku}}
+                                        {{customer.id}}
                                     </div>
 
                                     <!-- First Name -->
-                                    <div class="hidden sm:block truncate">
-                                        {{product.name}}
+                                    <div class="hidden md:block truncate">
+                                        {{customer.firstName}}
                                     </div>
 
                                     <!-- Second Name -->
-                                    <div class="hidden sm:block truncate">
-                                        {{product.name}}
+                                    <div class="hidden md:block truncate">
+                                        {{customer.middleName}}
+                                    </div>
+
+                                    <!-- Last Name -->
+                                    <div class="hidden md:block truncate">
+                                        {{customer.lastName}}
                                     </div>
 
                                     <!-- Email -->
-                                    <div class="hidden lg:flex items-center">
-                                        <div class="min-w-4">{{product.name}}</div>
-                                        <!-- Low stock -->
+                                    <div class="hidden md:block truncate">
+                                        <div class="min-w-4">{{customer.email}}</div>
                                     </div>
 
                                     <!-- Active -->
-                                    <div class="hidden lg:block">
-                                        <ng-container *ngIf="product.active">
+                                    <div class="hidden md:block grid grid-cols-3 gap-4 content-center">
+                                        <ng-container *ngIf="customer.active">
                                             <mat-icon
                                                 class="text-green-400 icon-size-5"
                                                 [svgIcon]="'heroicons_solid:check'"></mat-icon>
                                         </ng-container>
-                                        <ng-container *ngIf="!product.active">
+                                        <ng-container *ngIf="!customer.active">
                                             <mat-icon
                                                 class="text-gray-400 icon-size-5"
                                                 [svgIcon]="'heroicons_solid:x'"></mat-icon>
@@ -119,21 +129,21 @@
                                     </div>
 
                                     <!-- Details button -->
-                                    <div>
+                                    <div class="hidden md:block grid grid-cols-3 gap-4 content-center">
                                         <button
                                             class="min-w-10 min-h-7 h-7 px-2 leading-6"
                                             mat-stroked-button
-                                            (click)="toggleDetails(product.id)">
+                                            (click)="toggleDetails(customer.id)">
                                             <mat-icon
                                                 class="icon-size-5"
-                                                [svgIcon]="selectedProduct?.id === product.id ? 'heroicons_solid:chevron-up' : 'heroicons_solid:chevron-down'"></mat-icon>
+                                                [svgIcon]="selectedProduct?.id === customer.id ? 'heroicons_solid:chevron-up' : 'heroicons_solid:chevron-down'"></mat-icon>
                                         </button>
                                     </div>
                                 </div>
                                 <div class="grid">
-                                    <ng-container *ngIf="selectedProduct?.id === product.id">
+                                    <ng-container *ngIf="selectedProduct?.id === customer.id">
                                         <ng-container
-                                            *ngTemplateOutlet="rowDetailsTemplate; context: {$implicit: product}"></ng-container>
+                                            *ngTemplateOutlet="rowDetailsTemplate; context: {$implicit: customer}"></ng-container>
                                     </ng-container>
                                 </div>
                             </ng-container>
@@ -172,7 +182,8 @@
                                                 *ngIf="selectedCustomerForm.get('images').value.length; else noImage">
                                                 <img
                                                     class="w-full h-full object-cover"
-                                                    [src]="selectedCustomerForm.get('images').value[selectedCustomerForm.get('currentImageIndex').value]">
+                                                    [src]="">
+                                                <!--                                                    [src]="selectedCustomerForm.get('images').value[selectedCustomerForm.get('currentImageIndex').value]">-->
                                             </ng-container>
                                             <ng-template #noImage>
                                                 <span
@@ -205,9 +216,9 @@
                                     <div class="flex flex-col mt-8">
                                         <span class="font-semibold mb-2">Customer status</span>
                                         <mat-slide-toggle
-                                            [formControlName]="'active'"
+                                            [formControlName]="'status'"
                                             [color]="'primary'">
-                                            {{selectedCustomerForm.get('active').value === true ? 'Active' : 'Disabled'}}
+                                            {{selectedCustomerForm.get('status').value === true ? 'Active' : 'Disabled'}}
                                         </mat-slide-toggle>
                                     </div>
                                 </div>
@@ -222,19 +233,19 @@
                                                 <mat-label>First Name</mat-label>
                                                 <input
                                                     matInput
-                                                    [formControlName]="'name'">
+                                                    [formControlName]="'firstName'">
                                             </mat-form-field>
                                             <mat-form-field class="w-1/3 pr-2">
                                                 <mat-label>Middle Name</mat-label>
                                                 <input
                                                     matInput
-                                                    [formControlName]="'name'">
+                                                    [formControlName]="'middleName'">
                                             </mat-form-field>
                                             <mat-form-field class="w-1/3 pr-2">
                                                 <mat-label>Last Name</mat-label>
                                                 <input
                                                     matInput
-                                                    [formControlName]="'name'">
+                                                    [formControlName]="'lastName'">
                                             </mat-form-field>
                                         </div>
 
@@ -244,19 +255,19 @@
                                                 <mat-label>Id Number</mat-label>
                                                 <input
                                                     matInput
-                                                    [formControlName]="'barcode'">
+                                                    [formControlName]="'idNumber'">
                                             </mat-form-field>
                                             <mat-form-field class="w-1/3 pr-2">
                                                 <mat-label>Passport</mat-label>
                                                 <input
                                                     matInput
-                                                    [formControlName]="'barcode'">
+                                                    [formControlName]="'passport'">
                                             </mat-form-field>
                                             <mat-form-field class="w-1/3 pr-2">
                                                 <mat-label>Gender</mat-label>
-                                                <mat-select [formControlName]="'category'">
-                                                    <ng-container *ngFor="let category of categories">
-                                                        <mat-option [value]="category.id">
+                                                <mat-select [formControlName]="'gender'">
+                                                    <ng-container *ngFor="let category of [{name: 'Male'}, {name: 'Female'}]">
+                                                        <mat-option [value]="category.name">
                                                             {{category.name}}
                                                         </mat-option>
                                                     </ng-container>
@@ -270,19 +281,19 @@
                                                 <mat-label>Country</mat-label>
                                                 <input
                                                     matInput
-                                                    [formControlName]="'name'">
+                                                    [formControlName]="'country'">
                                             </mat-form-field>
                                             <mat-form-field class="w-1/3 pr-2">
                                                 <mat-label>City</mat-label>
                                                 <input
                                                     matInput
-                                                    [formControlName]="'name'">
+                                                    [formControlName]="'city'">
                                             </mat-form-field>
                                             <mat-form-field class="w-1/3 pr-2">
                                                 <mat-label>Home Port</mat-label>
                                                 <input
                                                     matInput
-                                                    [formControlName]="'name'">
+                                                    [formControlName]="'homePort'">
                                             </mat-form-field>
                                         </div>
 
@@ -295,7 +306,7 @@
                                             <mat-label>Date of Birth</mat-label>
                                             <input
                                                 matInput
-                                                [formControlName]="'cost'">
+                                                [formControlName]="'dob'">
                                         </mat-form-field>
 
 
@@ -304,13 +315,13 @@
                                                 <mat-label>Phone Number</mat-label>
                                                 <input
                                                     matInput
-                                                    [formControlName]="'basePrice'">
+                                                    [formControlName]="'phoneNumber'">
                                             </mat-form-field>
                                             <mat-form-field class="w-1/2">
                                                 <mat-label>Email</mat-label>
                                                 <input
                                                     matInput
-                                                    [formControlName]="'basePrice'">
+                                                    [formControlName]="'email'">
                                             </mat-form-field>
                                         </div>
 
@@ -319,14 +330,14 @@
                                             <mat-form-field class="w-1/2 pr-3">
                                                 <mat-label>Created By</mat-label>
                                                 <input
-                                                    matInput
-                                                    [formControlName]="'basePrice'">
+                                                    matInput readonly
+                                                    [formControlName]="'createdBy'">
                                             </mat-form-field>
                                             <mat-form-field class="w-1/2">
                                                 <mat-label>Created On</mat-label>
                                                 <input
-                                                    matInput
-                                                    [formControlName]="'basePrice'">
+                                                    matInput readonly
+                                                    [formControlName]="'createdAt'">
                                             </mat-form-field>
                                         </div>
 
@@ -377,7 +388,7 @@
 
             <ng-template #noProducts>
                 <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">There are no
-                    products!
+                    registered customers!
                 </div>
             </ng-template>
 

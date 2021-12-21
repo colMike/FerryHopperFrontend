@@ -1,12 +1,13 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { merge, Observable, Subject } from 'rxjs';
 import { debounceTime, map, switchMap, takeUntil } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { InventoryPagination, InventoryProduct, CustomerObject} from 'app/modules/admin/apps/customers/inventory/inventory.types';
+import { InventoryPagination, InventoryProduct} from 'app/modules/admin/apps/customers/inventory/inventory.types';
 import { InventoryService } from 'app/modules/admin/apps/customers/inventory/inventory.service';
 
 @Component({
@@ -16,18 +17,18 @@ import { InventoryService } from 'app/modules/admin/apps/customers/inventory/inv
         /* language=SCSS */
         `
             .inventory-grid {
-                grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% ;
+                grid-template-columns: 48px auto 40px;
 
                 @screen sm {
-                    grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% ;
+                    grid-template-columns: 48px auto 112px 72px;
                 }
 
                 @screen md {
-                    grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% ;
+                    grid-template-columns: 48px 112px auto 112px 72px;
                 }
 
                 @screen lg {
-                    grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% ;
+                    grid-template-columns: 48px 112px auto 112px 96px 96px 72px;
                 }
             }
         `
@@ -41,7 +42,7 @@ export class InventoryListComponent implements OnInit, AfterViewInit, OnDestroy
     @ViewChild(MatPaginator) private _paginator: MatPaginator;
     @ViewChild(MatSort) private _sort: MatSort;
 
-    customers$: Observable<CustomerObject[]>;
+    customers$: Observable<InventoryProduct[]>;
 
     flashMessage: 'success' | 'error' | null = null;
     isLoading: boolean = false;
@@ -75,27 +76,26 @@ export class InventoryListComponent implements OnInit, AfterViewInit, OnDestroy
     {
         // Create the selected product form
         this.selectedCustomerForm = this._formBuilder.group({
-            id : [''],
-            firstName : [''],
-            middleName : [''],
-            lastName : [''],
-            email : [''],
-            phoneNumber : [''],
-            dob :  [''],
-            gender : [''],
-            status : [''],
-            isLoggedIn : [''],
-            idNumber : [''],
-            passport : [''],
-            country : [''],
-            city : [''],
-            homePort : [''],
-            createdBy : [''],
-            createdAt : [''],
-            lastLogin : [''],
-            accountConfirmed : [''],
-            images : [[]],
-            currentImageIndex: [0],
+            id               : [''],
+            category         : [''],
+            name             : ['', [Validators.required]],
+            description      : [''],
+            tags             : [[]],
+            sku              : [''],
+            barcode          : [''],
+            brand            : [''],
+            vendor           : [''],
+            stock            : [''],
+            reserved         : [''],
+            cost             : [''],
+            basePrice        : [''],
+            taxPercent       : [''],
+            price            : [''],
+            weight           : [''],
+            thumbnail        : [''],
+            images           : [[]],
+            currentImageIndex: [0], // Image index that is currently being viewed
+            active           : [false]
         });
 
         // Get the pagination
@@ -111,10 +111,7 @@ export class InventoryListComponent implements OnInit, AfterViewInit, OnDestroy
             });
 
         // Get the customers
-        this.customers$ = this._inventoryService.customers$;
-        this.customers$.subscribe((item) => {
-            console.log(item);
-        });
+        this.customers$ = this._inventoryService.products$;
 
         // Subscribe to search input field value changes
         this.searchInputControl.valueChanges
@@ -142,7 +139,7 @@ export class InventoryListComponent implements OnInit, AfterViewInit, OnDestroy
         {
             // Set the initial sort
             this._sort.sort({
-                id          : 'firstName',
+                id          : 'name',
                 start       : 'asc',
                 disableClear: true
             });

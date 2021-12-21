@@ -3,7 +3,11 @@ import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@a
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { InventoryService } from 'app/modules/admin/apps/customers/inventory/inventory.service';
-import { InventoryBrand, InventoryCategory, InventoryPagination, InventoryProduct, InventoryTag, InventoryVendor } from 'app/modules/admin/apps/customers/inventory/inventory.types';
+import {
+    CustomerObject,
+    InventoryPagination,
+    InventoryProduct
+} from 'app/modules/admin/apps/customers/inventory/inventory.types';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +21,10 @@ export class InventoryBrandsResolver implements Resolve<any>
     {
     }
 
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
+        return undefined;
+    }
+
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -27,10 +35,7 @@ export class InventoryBrandsResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InventoryBrand[]>
-    {
-        return this._inventoryService.getBrands();
-    }
+
 }
 
 @Injectable({
@@ -45,20 +50,13 @@ export class InventoryCategoriesResolver implements Resolve<any>
     {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Resolver
-     *
-     * @param route
-     * @param state
-     */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InventoryCategory[]>
-    {
-        return this._inventoryService.getCategories();
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        return null;
     }
+
+
+
 }
 
 @Injectable({
@@ -131,7 +129,7 @@ export class InventoryProductsResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<{ pagination: InventoryPagination; products: InventoryProduct[] }>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<{ pagination: InventoryPagination; customers: CustomerObject[] }>
     {
         return this._inventoryService.getProducts();
     }
@@ -149,20 +147,10 @@ export class InventoryTagsResolver implements Resolve<any>
     {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Resolver
-     *
-     * @param route
-     * @param state
-     */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InventoryTag[]>
-    {
-        return this._inventoryService.getTags();
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
+        return undefined;
     }
+
 }
 
 @Injectable({
@@ -177,18 +165,8 @@ export class InventoryVendorsResolver implements Resolve<any>
     {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Resolver
-     *
-     * @param route
-     * @param state
-     */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InventoryVendor[]>
-    {
-        return this._inventoryService.getVendors();
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
+        return undefined;
     }
+
 }
