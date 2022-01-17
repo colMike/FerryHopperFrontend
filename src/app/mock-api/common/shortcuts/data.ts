@@ -69,7 +69,7 @@ export const shortcuts = [
         label      : 'Reload',
         description: 'Reload the app',
         icon       : 'heroicons_outline:refresh',
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : false
     }
 ];

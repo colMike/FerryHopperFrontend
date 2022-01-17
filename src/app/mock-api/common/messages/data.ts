@@ -25,7 +25,7 @@ export const messages = [
         description: 'Don\'t forget to pickup Jeremy after school!',
         time       : moment().subtract(3, 'hours').toISOString(), // 3 hours ago
         read       : true,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     },
     {
@@ -35,7 +35,7 @@ export const messages = [
         description: 'I\'ll proof read your bio on next Monday.',
         time       : moment().subtract(5, 'hours').toISOString(), // 5 hours ago
         read       : true,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     },
     {
@@ -45,7 +45,7 @@ export const messages = [
         description: 'Dude, I heard that they are going to promote you! Congrats man, tonight the drinks are on me!',
         time       : moment().subtract(7, 'hours').toISOString(), // 7 hours ago
         read       : false,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     },
     {
@@ -55,7 +55,7 @@ export const messages = [
         description: 'Boss, I\'ve sent all client invoices but Geoffrey refusing to pay.',
         time       : moment().subtract(9, 'hours').toISOString(), // 9 hours ago
         read       : false,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     },
     {
@@ -75,7 +75,7 @@ export const messages = [
         description: 'Why did\'t you still look at the kitten pictures I\'ve sent to you!',
         time       : moment().subtract(3, 'days').toISOString(), // 3 days ago
         read       : false,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     },
     {
@@ -85,7 +85,7 @@ export const messages = [
         description: 'Dude, Cheryl keeps bugging me with kitten pictures all the time :( What are we gonna do about it?',
         time       : moment().subtract(4, 'day').toISOString(), // 4 days ago
         read       : true,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     }
 ];

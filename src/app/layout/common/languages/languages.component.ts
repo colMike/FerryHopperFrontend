@@ -121,7 +121,7 @@ export class LanguagesComponent implements OnInit, OnDestroy
         const navigation = navComponent.navigation;
 
         // Get the Project dashboard item and update its title
-        const projectDashboardItem = this._fuseNavigationService.getItem('dashboards.project', navigation);
+        const projectDashboardItem = this._fuseNavigationService.getItem('dashboards.dashboard', navigation);
         if ( projectDashboardItem )
         {
             this._translocoService.selectTranslate('Project').pipe(take(1))

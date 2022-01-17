@@ -16,7 +16,7 @@ export const notifications = [
         description: '<strong>Leo Gill</strong> added you to <em>Top Secret Project</em> group and assigned you as a <em>Project Manager</em>',
         time       : moment().subtract(50, 'minutes').toISOString(), // 50 minutes ago
         read       : true,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     },
     {
@@ -26,7 +26,7 @@ export const notifications = [
         description: 'You have 15 unread mails across 3 mailboxes',
         time       : moment().subtract(3, 'hours').toISOString(), // 3 hours ago
         read       : false,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     },
     {
@@ -36,7 +36,7 @@ export const notifications = [
         description: 'Your <em>Docker container</em> is ready to publish',
         time       : moment().subtract(5, 'hours').toISOString(), // 5 hours ago
         read       : false,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     },
     {
@@ -45,7 +45,7 @@ export const notifications = [
         description: '<strong>Roger Murray</strong> accepted your friend request',
         time       : moment().subtract(7, 'hours').toISOString(), // 7 hours ago
         read       : true,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     },
     {
@@ -54,7 +54,7 @@ export const notifications = [
         description: '<strong>Sophie Stone</strong> sent you a direct message',
         time       : moment().subtract(9, 'hours').toISOString(), // 9 hours ago
         read       : true,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     },
     {
@@ -64,7 +64,7 @@ export const notifications = [
         description: 'You have 3 new mails',
         time       : moment().subtract(1, 'day').toISOString(), // 1 day ago
         read       : true,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     },
     {
@@ -74,7 +74,7 @@ export const notifications = [
         description: 'Your submission has been accepted and you are ready to sign-up for the final assigment which will be ready in 2 days',
         time       : moment().subtract(3, 'days').toISOString(), // 3 days ago
         read       : true,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     },
     {
@@ -84,7 +84,7 @@ export const notifications = [
         description: 'Your Vagrant container is ready to download',
         time       : moment().subtract(4, 'day').toISOString(), // 4 days ago
         read       : true,
-        link       : '/dashboards/project',
+        link       : '/dashboards/dashboard',
         useRouter  : true
     }
 ];

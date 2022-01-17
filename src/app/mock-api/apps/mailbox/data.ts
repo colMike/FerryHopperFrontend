@@ -210,7 +210,7 @@ export const mails = [
             'Graham Belltower <graham.belltower@company.com>'
         ],
         date       : moment().hour(20).minute(5).subtract(1, 'day').toISOString(), // Yesterday - 22:05
-        subject    : 'Quote for a new web design project',
+        subject    : 'Quote for a new web design dashboard',
         content    : 'Hey Brian,\n\nNisi officia aliqua ex non cupidatat sint ullamco. Irure pariatur ullamco consequat ut eu anim. Ut ad elit pariatur est non sunt. Tempor dolore quis commodo dolore duis officia laboris nostrud sint. Exercitation ullamco laboris eiusmod culpa ut.\n\nAute Lorem aute occaecat dolore tempor ipsum proident fugiat deserunt non incididunt velit nulla. Dolor pariatur tempor amet qui eu exercitation. Tempor minim culpa proident nisi esse ea. Enim est fugiat aliqua aliqua aute velit laborum cupidatat irure nisi dolor deserunt aliqua.\n\nFugiat ut dolor tempor sunt aliquip dolor nostrud. Consequat incididunt ullamco cillum dolore excepteur deserunt est dolor aliquip irure do mollit officia. Consectetur cillum et non minim nisi. Esse quis sunt deserunt elit sint velit tempor et ullamco laboris officia excepteur. Veniam ad ut aliqua sunt consequat reprehenderit nostrud non in duis aute quis pariatur. Occaecat mollit anim non pariatur. Ad do ad id fugiat et culpa laborum esse cupidatat voluptate elit ut magna voluptate.\n\nBest Regards,\nKarina Alford',
         attachments: [],
         starred    : false,

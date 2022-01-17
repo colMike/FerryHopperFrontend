@@ -664,8 +664,8 @@ export const demoCourseSteps = [
     },
     {
         order   : 2,
-        title   : 'Create a Firebase project and Set up your app',
-        subtitle: 'How to create a basic Firebase project and how to run it locally',
+        title   : 'Create a Firebase dashboard and Set up your app',
+        subtitle: 'How to create a basic Firebase dashboard and how to run it locally',
         content : `<h2 class="text-2xl sm:text-3xl">Create a Firebase project and Set up your app</h1> ${demoCourseContent}`
     },
     {
@@ -677,7 +677,7 @@ export const demoCourseSteps = [
     {
         order   : 4,
         title   : 'Deploy and run the web app',
-        subtitle: 'How to build, push and run the project remotely',
+        subtitle: 'How to build, push and run the dashboard remotely',
         content : `<h2 class="text-2xl sm:text-3xl">Deploy and run the web app</h1> ${demoCourseContent}`
     },
     {

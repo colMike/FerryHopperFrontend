@@ -268,50 +268,50 @@ export const guides = [
     {
         id        : 'f2592886-11b8-4b56-baab-96802c2ed93e',
         categoryId: '07b8421f-20bf-45b6-90ee-169ebe3a5bcc',
-        slug      : 'creating-a-project',
-        title     : 'Creating a project',
+        slug      : 'creating-a-dashboard',
+        title     : 'Creating a dashboard',
         subtitle  : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'
     },
     {
         id        : '9ec3f4b9-a355-4f57-9e93-efa8611cc1c9',
         categoryId: '07b8421f-20bf-45b6-90ee-169ebe3a5bcc',
-        slug      : 'renaming-a-project',
-        title     : 'Renaming a project',
+        slug      : 'renaming-a-dashboard',
+        title     : 'Renaming a dashboard',
         subtitle  : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'
     },
     {
         id        : '1bc6e7f9-b046-4f4f-9b18-741c9d5429f6',
         categoryId: '07b8421f-20bf-45b6-90ee-169ebe3a5bcc',
-        slug      : 'displaying-a-project',
-        title     : 'Displaying a project',
+        slug      : 'displaying-a-dashboard',
+        title     : 'Displaying a dashboard',
         subtitle  : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'
     },
     {
         id        : 'a005d5f1-938d-45c5-8ed4-d0cf8d02e533',
         categoryId: '07b8421f-20bf-45b6-90ee-169ebe3a5bcc',
-        slug      : 'deleting-a-project',
-        title     : 'Deleting a project',
+        slug      : 'deleting-a-dashboard',
+        title     : 'Deleting a dashboard',
         subtitle  : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'
     },
     {
         id        : '43837279-dce2-4dc0-beac-30b5ba829f14',
         categoryId: '07b8421f-20bf-45b6-90ee-169ebe3a5bcc',
-        slug      : 'changing-the-visibility-of-a-project',
-        title     : 'Changing the visibility of a project',
+        slug      : 'changing-the-visibility-of-a-dashboard',
+        title     : 'Changing the visibility of a dashboard',
         subtitle  : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'
     },
     {
         id        : '4cf5a435-eaa0-463c-8d2b-efde193c7fb3',
         categoryId: '07b8421f-20bf-45b6-90ee-169ebe3a5bcc',
-        slug      : 'adding-media-to-a-project',
-        title     : 'Adding media to a project',
+        slug      : 'adding-media-to-a-dashboard',
+        title     : 'Adding media to a dashboard',
         subtitle  : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'
     },
     {
         id        : 'cd3fb87e-e138-4721-9e29-a5c751bfd949',
         categoryId: '07b8421f-20bf-45b6-90ee-169ebe3a5bcc',
-        slug      : 'removing-a-media-from-a-project',
-        title     : 'Removing a media from a project',
+        slug      : 'removing-a-media-from-a-dashboard',
+        title     : 'Removing a media from a dashboard',
         subtitle  : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'
     },
     {
@@ -332,7 +332,7 @@ export const guides = [
     {
         id        : '98de7d4a-2ca2-4d47-bbe6-083ed26467db',
         categoryId: 'c88a1f54-360a-4b9b-a54b-2f92b7a1f63b',
-        slug      : 'project-settings',
+        slug      : 'dashboard-settings',
         title     : 'Project settings',
         subtitle  : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'
     },

@@ -3,11 +3,11 @@ import {FuseNavigationItem} from '@fuse/components/navigation';
 
 export const defaultNavigation: FuseNavigationItem[] = [
     {
-        id   : 'example',
+        id   : 'dashboard',
         title: 'Dashboard',
         type : 'basic',
         icon : 'heroicons_outline:desktop-computer',
-        link : '/example'
+        link : '/dashboard'
     },
     {
         id: 'user-interface.forms',
@@ -15,17 +15,17 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'collapsable',
         icon: 'heroicons_outline:user-group',
         children: [
-            {
-                id: 'user-interface.forms.fields',
-                title: 'Access Control',
-                type: 'basic',
-                link: '/apps/portal-user/inventory'
-            },
+            // {
+            //     id: 'user-interface.forms.fields',
+            //     title: 'Access Control',
+            //     type: 'basic',
+            //     link: ''
+            // },
             {
                 id: 'user-interface.forms.fields',
                 title: 'User Profile',
                 type: 'basic',
-                link: '/apps/portal-user/inventory'
+                link: '/apps/settings'
             }
         ]
     },
@@ -78,34 +78,61 @@ export const defaultNavigation: FuseNavigationItem[] = [
         ]
     },
 
+    {
+        id: 'user-interface.forms',
+        title: 'Reports',
+        type: 'collapsable',
+        icon: 'heroicons_outline:user-group',
+        children: [
+            {
+                id: 'user-interface.forms.fields',
+                title: 'Transaction Summary',
+                type: 'basic',
+                link: ''
+            },
+            {
+                id: 'user-interface.forms.fields',
+                title: 'Payments Summary',
+                type: 'basic',
+                link: ''
+            },
+            {
+                id: 'user-interface.forms.fields',
+                title: 'Trips Summary',
+                type: 'basic',
+                link: ''
+            }
+        ]
+    },
+
 
 
 ];
 export const compactNavigation: FuseNavigationItem[] = [
     {
-        id   : 'example',
+        id   : 'dashboard',
         title: 'Example',
         type : 'basic',
         icon : 'heroicons_outline:desktop-computer',
-        link : '/example'
+        link : '/dashboard'
     }
 ];
 export const futuristicNavigation: FuseNavigationItem[] = [
     {
-        id   : 'example',
+        id   : 'dashboard',
         title: 'Example',
         type : 'basic',
         icon : 'heroicons_outline:desktop-computer',
-        link : '/example'
+        link : '/dashboard'
     }
 ];
 export const horizontalNavigation: FuseNavigationItem[] = [
     {
-        id   : 'example',
+        id   : 'dashboard',
         title: 'Example',
         type : 'basic',
         icon : 'heroicons_outline:desktop-computer',
-        link : '/example'
+        link : '/dashboard'
     }
 ];
 
@@ -123,11 +150,11 @@ export const horizontalNavigation: FuseNavigationItem[] = [
 //         icon    : 'heroicons_outline:home',
 //         children: [
 //             {
-//                 id   : 'dashboards.project',
+//                 id   : 'dashboards.dashboard',
 //                 title: 'Project',
 //                 type : 'basic',
 //                 icon : 'heroicons_outline:clipboard-check',
-//                 link : '/dashboards/project'
+//                 link : '/dashboards/dashboard'
 //             },
 //             {
 //                 id   : 'dashboards.analytics',
@@ -1258,7 +1285,7 @@ export const horizontalNavigation: FuseNavigationItem[] = [
 //             },
 //             {
 //                 id   : 'navigation-features.multi-line',
-//                 title: 'A multi line navigation item title example which works just fine',
+//                 title: 'A multi line navigation item title dashboard which works just fine',
 //                 icon : 'heroicons_outline:check-circle',
 //                 type : 'basic'
 //             }
