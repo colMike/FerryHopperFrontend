@@ -4,8 +4,8 @@ import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import {
     InventoryPagination,
-    CustomerObject
-} from 'app/modules/app/customers/inventory/customers.types';
+    UserObject
+} from 'app/modules/app/users/inventory/users.types';
 import { environment } from 'environments/environment.prod';
 
 
@@ -16,8 +16,8 @@ export class UsersService
 {
     // Private
     private _pagination: BehaviorSubject<InventoryPagination | null> = new BehaviorSubject(null);
-    private _customer: BehaviorSubject<CustomerObject | null> = new BehaviorSubject(null);
-    private _customers: BehaviorSubject<CustomerObject[] | null> = new BehaviorSubject(null);
+    private _customer: BehaviorSubject<UserObject | null> = new BehaviorSubject(null);
+    private _customers: BehaviorSubject<UserObject[] | null> = new BehaviorSubject(null);
     /**
      * Constructor
      */
@@ -40,7 +40,7 @@ export class UsersService
     /**
      * Getter for product
      */
-    get customer$(): Observable<CustomerObject>
+    get customer$(): Observable<UserObject>
     {
         return this._customer.asObservable();
     }
@@ -48,7 +48,7 @@ export class UsersService
     /**
      * Getter for products
      */
-    get customers$(): Observable<CustomerObject[]>
+    get customers$(): Observable<UserObject[]>
     {
         return this._customers.asObservable();
     }
@@ -68,7 +68,7 @@ export class UsersService
      * @param search
      */
     getProducts(page: number = 0, size: number = 10, sort: string = 'name', order: 'asc' | 'desc' | '' = 'asc', search: string = ''):
-        Observable<{ pagination: InventoryPagination; customers: CustomerObject[] }>
+        Observable<{ pagination: InventoryPagination; customers: UserObject[] }>
     {
 
         const body = {
@@ -82,7 +82,7 @@ export class UsersService
 
         console.log('In Get products function');
         return this._httpClient.post<any>(environment.apiUrl + '/users', body
-        // return this._httpClient.get<{ pagination: InventoryPagination; customers: CustomerObject[] }>('api/apps/ecommerce/inventory/customers', {
+        // return this._httpClient.get<{ pagination: InventoryPagination; customers: UserObject[] }>('api/apps/ecommerce/inventory/customers', {
         //     params: {
         //         page: '' + page,
         //         size: '' + size,
@@ -104,14 +104,14 @@ export class UsersService
     /**
      * Get product by id
      */
-    getProductById(id: string): Observable<CustomerObject>
+    getProductById(id: string): Observable<UserObject>
     {
         return this._customers.pipe(
             take(1),
             map((products) => {
 
                 // Find the product
-                const product = products.find(item => item.id === id) || null;
+                const product = products.find(item => item.userId === parseInt(id, 10)) || null;
 
                 // Update the product
                 this._customer.next(product);
@@ -134,11 +134,36 @@ export class UsersService
     /**
      * Create product
      */
-    createProduct(): Observable<CustomerObject>
+    createProduct(): Observable<UserObject>
     {
+        const body = {
+            'head': {
+                'userId': 'PDD001',
+                'requestId': 'XXXXXXXXXXXXX',
+                'status': '',
+                'message': ''
+            },
+            'body': {
+                'user': {
+                    'loginId': '',
+                    'roleId': 0,
+                    'status': 0,
+                    'password': '',
+                    'isConfirmed': false,
+                    'firstName': '',
+                    'middleName': '',
+                    'surname': '',
+                    'idNumber': '',
+                    'email': '',
+                    'passportNumber': '',
+                    'lastLoginDate': '',
+                    'isLoggedIn': false
+                }
+            }
+        };
         return this.customers$.pipe(
             take(1),
-            switchMap(products => this._httpClient.post<CustomerObject>('api/apps/ecommerce/inventory/customer', {}).pipe(
+            switchMap(products => this._httpClient.post<UserObject>(environment.apiUrl + '/create-user', body).pipe(
                 map((newProduct) => {
 
                     // Update the products with the new product
@@ -157,18 +182,49 @@ export class UsersService
      * @param id
      * @param product
      */
-    updateProduct(id: string, product: CustomerObject): Observable<CustomerObject>
+    updateProduct(id: string, product: UserObject): Observable<UserObject>
     {
+        const body = {
+            'head': {
+                'userId': 'PDD001',
+                'requestId': 'XXXXXXXXXXXXX',
+                'status': '',
+                'message': ''
+            },
+            'body': {
+                'user': {
+                    'userId': 0,
+                    'loginId': 'PDD002',
+                    'roleId': 1,
+                    'status': 0,
+                    'password': 'ttyyyy',
+                    'isConfirmed': true,
+                    'firstName': 'Jonah',
+                    'middleName': 'Kimani',
+                    'surname': 'Njore',
+                    'idNumber': '1234546789',
+                    'email': 'davydd@gmail.com',
+                    'passportNumber': '489649IEUI',
+                    'lastLoginDate': '',
+                    'isLoggedIn': true
+                }
+            }
+        };
+
         return this.customers$.pipe(
             take(1),
-            switchMap(products => this._httpClient.patch<CustomerObject>('api/apps/ecommerce/inventory/customer', {
-                id,
-                product
-            }).pipe(
+
+            switchMap(products => this._httpClient.post<UserObject>(environment.apiUrl + '/create-user', body
+
+                // switchMap(products => this._httpClient.patch<UserObject>('api/apps/ecommerce/inventory/customer', {
+            //     id,
+            //     product
+            // }
+            ).pipe(
                 map((updatedProduct) => {
 
                     // Find the index of the updated product
-                    const index = products.findIndex(item => item.id === id);
+                    const index = products.findIndex(item => item.userId === parseInt(id, 10));
 
                     // Update the product
                     products[index] = updatedProduct;
@@ -181,7 +237,7 @@ export class UsersService
                 }),
                 switchMap(updatedProduct => this.customer$.pipe(
                     take(1),
-                    filter(item => item && item.id === id),
+                    filter(item => item && item.userId === parseInt(id, 10)),
                     tap(() => {
 
                         // Update the product if it's selected
@@ -208,7 +264,7 @@ export class UsersService
                 map((isDeleted: boolean) => {
 
                     // Find the index of the deleted product
-                    const index = products.findIndex(item => item.id === id);
+                    const index = products.findIndex(item => item.userId === parseInt(id, 10));
 
                     // Delete the product
                     products.splice(index, 1);

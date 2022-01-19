@@ -6,8 +6,10 @@ export interface InventoryProduct
     status: number;
     passengerCapacity: number;
     cargoCapacity: number;
-    createdBy: number;
-    updatedBy: number;
+    createdBy?: number;
+    createdOn?: string;
+    updatedBy?: number;
+    updatedOn?: string;
     fleetNumber?: string;
 }
 
@@ -29,7 +31,9 @@ export interface FerryObject
     status: number;
     passengerCapacity: number;
     cargoCapacity: number;
-    createdBy: number;
-    updatedBy: number;
+    createdBy?: number;
+    createdOn?: string;
+    updatedBy?: number;
+    updatedOn?: string;
     fleetNumber?: string;
 }

@@ -51,6 +51,7 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy
     selectedProduct: InventoryProduct | null = null;
     selectedCustomerForm: FormGroup;
     tagsEditMode: boolean = false;
+    documentType = 'idCard';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -76,26 +77,26 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy
     {
         // Create the selected product form
         this.selectedCustomerForm = this._formBuilder.group({
-            id : [''],
-            firstName : [''],
-            middleName : [''],
-            lastName : [''],
-            gender : [''],
-            idNumber : [''],
-            passport : [''],
-            country : [''],
-            city : [''],
-            homePort : [''],
-            email : [''],
-            phoneNumber : [''],
-            status : [''],
-            createdBy : [''],
-            accountConfirmed : [''],
-            isLoggedIn : [''],
+            custId:[''],
+            firstName:[''],
+            middleName:[''],
+            surname:[''],
+            gender:[''],
+            id:[''],
+            passport:[''],
+            country:[''],
+            city:[''],
+            homePortId:[''],
+            email:[''],
+            phoneNumber:[''],
+            password:[''],
+            status:[''],
+            createdBy:[''],
+            dateOfBirth:[''],
+            createdOn: [''],
+            lastLogin: [''],
+            accountConfirmed: [''],
 
-            dob :  [''],
-            createdAt : [''],
-            lastLogin : [''],
             images : [[]],
             currentImageIndex: [0],
         });
@@ -201,8 +202,9 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy
      */
     toggleDetails(productId: string): void
     {
+
         // If the product is already selected...
-        if ( this.selectedProduct && this.selectedProduct.id === productId )
+        if ( this.selectedProduct && this.selectedProduct.custId === parseInt(productId) )
         {
             // Close the details
             this.closeDetails();
@@ -212,6 +214,9 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy
         // Get the product by id
         this._inventoryService.getProductById(productId)
             .subscribe((product) => {
+
+                console.log('got this product');
+                console.log(product);
 
                 // Set the selected product
                 this.selectedProduct = product;
@@ -291,7 +296,7 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy
         delete product.currentImageIndex;
 
         // Update the product on the server
-        this._inventoryService.updateProduct(product.id, product).subscribe(() => {
+        this._inventoryService.updateProduct(product.custId, product).subscribe(() => {
 
             // Show a success message
             this.showFlashMessage('success');
@@ -305,11 +310,11 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy
     {
         // Open the confirmation dialog
         const confirmation = this._fuseConfirmationService.open({
-            title  : 'Delete product',
-            message: 'Are you sure you want to remove this product? This action cannot be undone!',
+            title  : 'Disable Customer',
+            message: 'Are you sure you want to disable this customer? This customer will need to be re-enabled for use later.',
             actions: {
                 confirm: {
-                    label: 'Delete'
+                    label: 'Disable'
                 }
             }
         });
@@ -325,7 +330,7 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy
                 const product = this.selectedCustomerForm.getRawValue();
 
                 // Delete the product on the server
-                this._inventoryService.deleteProduct(product.id).subscribe(() => {
+                this._inventoryService.deleteProduct(product.custId).subscribe(() => {
 
                     // Close the details
                     this.closeDetails();
@@ -363,6 +368,10 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy
      */
     trackByFn(index: number, item: any): any
     {
-        return item.id || index;
+        return item.custId || index;
+    }
+
+    documentTypeChanged(value: any): any {
+        this.documentType = value;
     }
 }

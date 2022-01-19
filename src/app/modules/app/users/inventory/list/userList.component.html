@@ -52,7 +52,7 @@
                             matSortDisableClear>
                             <div
                                 class="hidden md:block truncate"
-                                [mat-sort-header]="'id'">
+                                [mat-sort-header]="'userId'">
                                 ID.
                             </div>
                             <div
@@ -91,7 +91,7 @@
 
                                     <!-- SKU -->
                                     <div class="hidden md:block truncate">
-                                        {{customer.id}}
+                                        {{customer.userId}}
                                     </div>
 
                                     <!-- First Name -->
@@ -106,7 +106,7 @@
 
                                     <!-- Last Name -->
                                     <div class="hidden md:block truncate">
-                                        {{customer.lastName}}
+                                        {{customer.surname}}
                                     </div>
 
                                     <!-- Email -->
@@ -116,12 +116,12 @@
 
                                     <!-- Active -->
                                     <div class="hidden md:block grid grid-cols-3 gap-4 content-center">
-                                        <ng-container *ngIf="customer.active">
+                                        <ng-container *ngIf="customer.isConfirmed">
                                             <mat-icon
                                                 class="text-green-400 icon-size-5"
                                                 [svgIcon]="'heroicons_solid:check'"></mat-icon>
                                         </ng-container>
-                                        <ng-container *ngIf="!customer.active">
+                                        <ng-container *ngIf="!customer.isConfirmed">
                                             <mat-icon
                                                 class="text-gray-400 icon-size-5"
                                                 [svgIcon]="'heroicons_solid:x'"></mat-icon>
@@ -133,15 +133,15 @@
                                         <button
                                             class="min-w-10 min-h-7 h-7 px-2 leading-6"
                                             mat-stroked-button
-                                            (click)="toggleDetails(customer.id)">
+                                            (click)="toggleDetails(customer.userId)">
                                             <mat-icon
                                                 class="icon-size-5"
-                                                [svgIcon]="selectedProduct?.id === customer.id ? 'heroicons_solid:chevron-up' : 'heroicons_solid:chevron-down'"></mat-icon>
+                                                [svgIcon]="selectedProduct?.userId === customer.userId ? 'heroicons_solid:chevron-up' : 'heroicons_solid:chevron-down'"></mat-icon>
                                         </button>
                                     </div>
                                 </div>
                                 <div class="grid">
-                                    <ng-container *ngIf="selectedProduct?.id === customer.id">
+                                    <ng-container *ngIf="selectedProduct?.userId === customer.userId">
                                         <ng-container
                                             *ngTemplateOutlet="rowDetailsTemplate; context: {$implicit: customer}"></ng-container>
                                     </ng-container>
@@ -197,11 +197,11 @@
                                         </div>
                                     </div>
                                     <div class="flex flex-col mt-8">
-                                        <span class="font-semibold mb-2">User status</span>
+                                        <span class="font-semibold mb-2">Approve User</span>
                                         <mat-slide-toggle
-                                            [formControlName]="'status'"
+                                            [formControlName]="'isConfirmed'"
                                             [color]="'primary'">
-                                            {{selectedUserForm.get('status').value === true ? 'Active' : 'Disabled'}}
+                                            {{selectedUserForm.get('isConfirmed').value === true ? 'Approved' : 'Pending'}}
                                         </mat-slide-toggle>
                                     </div>
                                 </div>
@@ -228,110 +228,120 @@
                                                 <mat-label>Last Name</mat-label>
                                                 <input
                                                     matInput
-                                                    [formControlName]="'lastName'">
+                                                    [formControlName]="'surname'">
                                             </mat-form-field>
                                         </div>
 
                                         <!-- SKU and Barcode -->
                                         <div class="flex">
                                             <mat-form-field class="w-1/3 pr-2">
-                                                <mat-label>Id Number</mat-label>
-                                                <input
-                                                    matInput
-                                                    [formControlName]="'idNumber'">
-                                            </mat-form-field>
-                                            <mat-form-field class="w-1/3 pr-2">
-                                                <mat-label>Passport</mat-label>
-                                                <input
-                                                    matInput
-                                                    [formControlName]="'passport'">
-                                            </mat-form-field>
-                                            <mat-form-field class="w-1/3 pr-2">
-                                                <mat-label>Gender</mat-label>
-                                                <mat-select [formControlName]="'gender'">
-                                                    <ng-container *ngFor="let category of [{name: 'Male'}, {name: 'Female'}]">
+                                                <mat-label>Document Type</mat-label>
+                                                <mat-select value="idCard" (selectionChange)="documentTypeChanged($event.value)">
+                                                    <ng-container *ngFor="let category of [{name: 'idCard'}, {name: 'passport'}]">
                                                         <mat-option [value]="category.name">
                                                             {{category.name}}
                                                         </mat-option>
                                                     </ng-container>
                                                 </mat-select>
                                             </mat-form-field>
+
+                                            <mat-form-field class="w-2/3 pr-2"  *ngIf="documentType ==='idCard'">
+                                                <mat-label>Id Number</mat-label>
+                                                <input
+                                                    matInput
+                                                    [formControlName]="'idNumber'">
+                                            </mat-form-field>
+                                            <mat-form-field class="w-2/3 pr-2"  *ngIf="documentType ==='passport'">
+                                                <mat-label>Passport</mat-label>
+                                                <input
+                                                    matInput
+                                                    [formControlName]="'passportNumber'">
+                                            </mat-form-field>
+
                                         </div>
 
                                         <!-- Location Details -->
                                         <div class="flex">
-                                            <mat-form-field class="w-1/3 pr-2">
-                                                <mat-label>Country</mat-label>
-                                                <input
-                                                    matInput
-                                                    [formControlName]="'country'">
-                                            </mat-form-field>
-                                            <mat-form-field class="w-1/3 pr-2">
-                                                <mat-label>City</mat-label>
-                                                <input
-                                                    matInput
-                                                    [formControlName]="'city'">
-                                            </mat-form-field>
-                                            <mat-form-field class="w-1/3 pr-2">
-                                                <mat-label>Home Port</mat-label>
-                                                <input
-                                                    matInput
-                                                    [formControlName]="'homePort'">
-                                            </mat-form-field>
+<!--                                            <mat-form-field class="w-1/3 pr-2">-->
+<!--                                                <mat-label>Country</mat-label>-->
+<!--                                                <input-->
+<!--                                                    matInput-->
+<!--                                                    [formControlName]="'country'">-->
+<!--                                            </mat-form-field>-->
+<!--                                            <mat-form-field class="w-1/3 pr-2">-->
+<!--                                                <mat-label>City</mat-label>-->
+<!--                                                <input-->
+<!--                                                    matInput-->
+<!--                                                    [formControlName]="'city'">-->
+<!--                                            </mat-form-field>-->
+<!--                                            <mat-form-field class="w-1/3 pr-2">-->
+<!--                                                <mat-label>Home Port</mat-label>-->
+<!--                                                <input-->
+<!--                                                    matInput-->
+<!--                                                    [formControlName]="'homePort'">-->
+<!--                                            </mat-form-field>-->
                                         </div>
 
 
                                     </div>
 
-                                    <!-- Cost, Base price, Tax & Price -->
                                     <div class="flex flex-col w-full lg:w-1/2 sm:pl-8">
 
 
                                         <div class="flex">
                                             <mat-form-field class="w-1/2 pr-3">
-                                                <mat-label>User Role</mat-label>
-                                                <input
-                                                    matInput
-                                                    [formControlName]="'roleName'">
-                                            </mat-form-field>
-                                            <mat-form-field class="w-1/2">
-                                                <mat-label>Date of Birth</mat-label>
-                                                <input
-                                                    matInput
-                                                    [formControlName]="'dob'">
-                                            </mat-form-field>
-                                        </div>
-
-
-                                        <div class="flex">
-                                            <mat-form-field class="w-1/2 pr-3">
-                                                <mat-label>Phone Number</mat-label>
-                                                <input
-                                                    matInput
-                                                    [formControlName]="'phoneNumber'">
-                                            </mat-form-field>
-                                            <mat-form-field class="w-1/2">
                                                 <mat-label>Email</mat-label>
                                                 <input
                                                     matInput
                                                     [formControlName]="'email'">
                                             </mat-form-field>
+                                            <mat-form-field class="w-1/2 pr-3">
+                                                <mat-label>User Role</mat-label>
+                                                <input
+                                                    matInput
+                                                    [formControlName]="'roleId'">
+                                            </mat-form-field>
+<!--                                            <mat-form-field class="w-1/2">-->
+<!--                                                <mat-label>Date of Birth</mat-label>-->
+<!--                                                <input-->
+<!--                                                    matInput-->
+<!--                                                    [formControlName]="'dob'">-->
+<!--                                            </mat-form-field>-->
                                         </div>
 
 
-                                        <div class="flex">
-                                            <mat-form-field class="w-1/2 pr-3">
-                                                <mat-label>Created By</mat-label>
-                                                <input
-                                                    matInput readonly
-                                                    [formControlName]="'createdBy'">
-                                            </mat-form-field>
-                                            <mat-form-field class="w-1/2">
-                                                <mat-label>Created On</mat-label>
-                                                <input
-                                                    matInput readonly
-                                                    [formControlName]="'createdAt'">
-                                            </mat-form-field>
+                                        <div class="flex" *ngIf="documentType ==='idCard'">
+                                            <div class="w-1/2 pr-3">
+                                                <mat-label>ID Front</mat-label>
+                                                <input type="file" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
+                                            </div>
+
+                                            <div class="w-1/2 pr-3">
+                                                <mat-label>ID Back</mat-label>
+                                                <input type="file" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="flex" *ngIf="documentType ==='passport'">
+
+                                            <div class="w-full">
+                                                <mat-label>Passport Image</mat-label>
+                                                <input type="file" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                            </div>
+<!--                                            <mat-form-field class="w-1/2 pr-3">-->
+<!--                                                <mat-label>Created By</mat-label>-->
+<!--                                                <input-->
+<!--                                                    matInput readonly-->
+<!--                                                    [formControlName]="'createdBy'">-->
+<!--                                            </mat-form-field>-->
+<!--                                            <mat-form-field class="w-1/2">-->
+<!--                                                <mat-label>Created On</mat-label>-->
+<!--                                                <input-->
+<!--                                                    matInput readonly-->
+<!--                                                    [formControlName]="'createdAt'">-->
+<!--                                            </mat-form-field>-->
                                         </div>
 
                                     </div>
@@ -346,7 +356,7 @@
                                     mat-button
                                     [color]="'warn'"
                                     (click)="deleteSelectedProduct()">
-                                    Delete
+                                    Disable User
                                 </button>
                                 <div class="flex items-center">
                                     <div
@@ -369,7 +379,7 @@
                                         mat-flat-button
                                         [color]="'primary'"
                                         (click)="updateSelectedProduct()">
-                                        Update
+                                        Update User
                                     </button>
                                 </div>
                             </div>
@@ -381,7 +391,7 @@
 
             <ng-template #noProducts>
                 <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">There are no
-                    registered customers!
+                    registered users!
                 </div>
             </ng-template>
 

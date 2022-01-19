@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { CustomersService } from 'app/modules/app/customers/inventory/customers.service';
+import { UsersService } from 'app/modules/app/users/inventory/users.service';
 import {
     CustomerObject,
     InventoryPagination,
     InventoryProduct
-} from 'app/modules/app/customers/inventory/customers.types';
+} from 'app/modules/app/users/inventory/users.types';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +17,7 @@ export class InventoryBrandsResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _inventoryService: CustomersService)
+    constructor(private _inventoryService: UsersService)
     {
     }
 
@@ -46,7 +46,7 @@ export class InventoryCategoriesResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _inventoryService: CustomersService)
+    constructor(private _inventoryService: UsersService)
     {
     }
 
@@ -68,7 +68,7 @@ export class InventoryProductResolver implements Resolve<any>
      * Constructor
      */
     constructor(
-        private _inventoryService: CustomersService,
+        private _inventoryService: UsersService,
         private _router: Router
     )
     {
@@ -115,7 +115,7 @@ export class InventoryProductsResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _inventoryService: CustomersService)
+    constructor(private _inventoryService: UsersService)
     {
     }
 
@@ -143,7 +143,7 @@ export class InventoryTagsResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _inventoryService: CustomersService)
+    constructor(private _inventoryService: UsersService)
     {
     }
 
@@ -161,7 +161,7 @@ export class InventoryVendorsResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _inventoryService: CustomersService)
+    constructor(private _inventoryService: UsersService)
     {
     }
 

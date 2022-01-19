@@ -108,7 +108,7 @@ export class FerriesService
     getProductById(id: string): Observable<FerryObject>
     {
         console.log('here is the id to check.');
-        console.log(id)
+        console.log(id);
         return this._ferries.pipe(
             take(1),
             map((products) => {
@@ -162,13 +162,30 @@ export class FerriesService
      */
     updateProduct(id: string, product: FerryObject): Observable<FerryObject>
     {
+        const body = {
+            'head': {
+                'requestId': 'XXXXXXXXXXXXX',
+                'useId': '',
+                'status': '',
+                'message': ''
+            },
+            'body': {
+                ship: product
+            }
+        };
+
         return this.ferries$.pipe(
             take(1),
-            switchMap(products => this._httpClient.patch<FerryObject>('api/apps/ecommerce/inventory/customer', {
-                id,
-                product
-            }).pipe(
+            switchMap(products => this._httpClient.post<FerryObject>(environment.apiUrl + '/create-ferry', body
+            // switchMap(products => this._httpClient.patch<FerryObject>('api/apps/ecommerce/inventory/customer', {
+            //     id,
+            //     product
+            // }
+            ).pipe(
                 map((updatedProduct) => {
+
+                    console.log('updatedProduct imerudi ikikaa hivi.');
+                    console.log(updatedProduct);
 
                     // Find the index of the updated product
                     const index = products.findIndex(item => item.shipId === id);

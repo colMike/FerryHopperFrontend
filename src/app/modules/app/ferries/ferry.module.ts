@@ -17,6 +17,8 @@ import { SharedModule } from 'app/shared/shared.module';
 import { FerriesComponent } from    'app/modules/app/ferries/inventory/ferries.component';
 import { FerryListComponent } from 'app/modules/app/ferries/inventory/list/ferryList.component';
 import { ferryRoutes } from 'app/modules/app/ferries/ferry.routing';
+import { CommonModule } from '@angular/common';
+
 
 @NgModule({
     declarations: [
@@ -38,7 +40,8 @@ import { ferryRoutes } from 'app/modules/app/ferries/ferry.routing';
         MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
-        SharedModule
+        SharedModule,
+        CommonModule
     ]
 })
 export class FerryModule

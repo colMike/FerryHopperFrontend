@@ -68,8 +68,8 @@ export class ProjectComponent implements OnInit, OnDestroy
         // Start for map present
         navigator.geolocation.getCurrentPosition((position) => {
             this.center = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
+                lat: 13.468199, //position.coords.latitude,
+                lng: -16.581739 //position.coords.longitude,
             };
         });
         // End for map present

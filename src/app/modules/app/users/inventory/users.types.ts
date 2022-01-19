@@ -1,21 +1,20 @@
 export interface InventoryProduct
 {
-    id: string;
-    category?: string;
-    name: string;
-    description?: string;
-    tags?: string[];
-    sku?: string | null;
-    barcode?: string | null;
-    brand?: string | null;
-    vendor: string | null;
-    stock: number;
-    reserved: number;
-    cost: number;
-    basePrice: number;
-    taxPercent: number;
-    price: number;
-    weight: number;
+    userId?: number;
+    loginId?: string;
+    roleId?: number;
+    status?: number;
+    password?: boolean;
+    isConfirmed?: string;
+    firstName?: string;
+    middleName?: string;
+    surname?: string;
+    idNumber?: string;
+    email?: string;
+    passportNumber?: string;
+    lastLoginDate?: string;
+    isLoggedIn?: boolean;
+
     thumbnail: string;
     images: string[];
     active: boolean;
@@ -31,24 +30,23 @@ export interface InventoryPagination
     endIndex: number;
 }
 
-export interface CustomerObject
+export interface UserObject
 {
-    id: string;
-    category?: string;
-    name: string;
-    description?: string;
-    tags?: string[];
-    sku?: string | null;
-    barcode?: string | null;
-    brand?: string | null;
-    vendor: string | null;
-    stock: number;
-    reserved: number;
-    cost: number;
-    basePrice: number;
-    taxPercent: number;
-    price: number;
-    weight: number;
+    userId?: number;
+    loginId?: string;
+    roleId?: number;
+    status?: number;
+    password?: boolean;
+    isConfirmed?: string;
+    firstName?: string;
+    middleName?: string;
+    surname?: string;
+    idNumber?: string;
+    email?: string;
+    passportNumber?: string;
+    lastLoginDate?: string;
+    isLoggedIn?: boolean;
+
     thumbnail: string;
     images: string[];
     active: boolean;

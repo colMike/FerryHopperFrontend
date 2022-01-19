@@ -106,8 +106,11 @@ export class CustomersService
             take(1),
             map((products) => {
 
+                console.log('products');
+                console.log(products);
+
                 // Find the product
-                const product = products.find(item => item.id === id) || null;
+                const product = products.find(item => item.custId === parseInt(id, 10)) || null;
 
                 // Update the product
                 this._customer.next(product);
@@ -135,36 +138,20 @@ export class CustomersService
 
         const body = {
             'head': {
-                'userId': 'PDD001',
                 'requestId': 'XXXXXXXXXXXXX',
+                'useId': '',
                 'status': '',
                 'message': ''
             },
             'body': {
-                'user': {
-                    'userId': 0,
-                    'loginId': 'PDD002',
-                    'roleId': 1,
-                    'status': 0,
-                    'password': 'ttyyyy',
-                    'isConfirmed': true,
-                    'firstName': 'Michael',
-                    'middleName': 'N',
-                    'surname': 'M',
-                    'idNumber': '333022921218',
-                    'email': 'mike@gmail.com',
-                    'passportNumber': '2489649IEUI',
-                    'lastLoginDate': '',
-                    'isLoggedIn': true
-                }
+                customer: ''
             }
         };
 
         return this.customers$.pipe(
             take(1),
-            switchMap(products => this._httpClient.post<CustomerObject>('http://3.20.249.162:8081/customer', body
+            switchMap(products => this._httpClient.post<CustomerObject>(environment.apiUrl + '/create-customer', body
             ).pipe(
-            // switchMap(products => this._httpClient.post<CustomerObject>('api/apps/ecommerce/inventory/customer', {}).pipe(
                 map((newProduct) => {
 
                     // Update the products with the new product
@@ -185,16 +172,31 @@ export class CustomersService
      */
     updateProduct(id: string, product: CustomerObject): Observable<CustomerObject>
     {
+        const body = {
+            'head': {
+                'requestId': 'XXXXXXXXXXXXX',
+                'useId': '',
+                'status': '',
+                'message': ''
+            },
+            'body': {
+                customer: product
+            }
+        };
+
         return this.customers$.pipe(
             take(1),
-            switchMap(products => this._httpClient.patch<CustomerObject>('api/apps/ecommerce/inventory/customer', {
-                id,
-                product
-            }).pipe(
+            switchMap(products => this._httpClient.post<CustomerObject>(environment.apiUrl + '/create-customer', body
+            ).pipe(
                 map((updatedProduct) => {
 
+                    console.log('Here is the body');
+                    console.log(body);
+                    console.log('Here is the updated product');
+                    console.log(products);
+                    console.log(updatedProduct);
                     // Find the index of the updated product
-                    const index = products.findIndex(item => item.id === id);
+                    const index = products.findIndex(item => item.custId === parseInt(id, 10));
 
                     // Update the product
                     products[index] = updatedProduct;
@@ -207,7 +209,7 @@ export class CustomersService
                 }),
                 switchMap(updatedProduct => this.customer$.pipe(
                     take(1),
-                    filter(item => item && item.id === id),
+                    filter(item => item && item.custId === parseInt(id)),
                     tap(() => {
 
                         // Update the product if it's selected
@@ -234,7 +236,7 @@ export class CustomersService
                 map((isDeleted: boolean) => {
 
                     // Find the index of the deleted product
-                    const index = products.findIndex(item => item.id === id);
+                    const index = products.findIndex(item => item.custId === parseInt(id));
 
                     // Delete the product
                     products.splice(index, 1);

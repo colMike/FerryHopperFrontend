@@ -1,22 +1,31 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { merge, Observable, Subject } from 'rxjs';
-import { debounceTime, map, switchMap, takeUntil } from 'rxjs/operators';
-import { fuseAnimations } from '@fuse/animations';
-import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { InventoryPagination, InventoryProduct, CustomerObject} from 'app/modules/app/users/inventory/users.types';
-import { UsersService } from 'app/modules/app/users/inventory/users.service';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {merge, Observable, Subject} from 'rxjs';
+import {debounceTime, map, switchMap, takeUntil} from 'rxjs/operators';
+import {fuseAnimations} from '@fuse/animations';
+import {FuseConfirmationService} from '@fuse/services/confirmation';
+import {InventoryPagination, InventoryProduct, UserObject} from 'app/modules/app/users/inventory/users.types';
+import {UsersService} from 'app/modules/app/users/inventory/users.service';
 
 @Component({
-    selector       : 'inventory-list',
-    templateUrl    : './userList.component.html',
-    styles         : [
+    selector: 'inventory-list',
+    templateUrl: './userList.component.html',
+    styles: [
         /* language=SCSS */
-        `
+            `
             .inventory-grid {
-                grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5%;
 
                 @screen sm {
                     grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
@@ -32,17 +41,13 @@ import { UsersService } from 'app/modules/app/users/inventory/users.service';
             }
         `
     ],
-    encapsulation  : ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations     : fuseAnimations
+    animations: fuseAnimations
 })
-export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
-{
-    @ViewChild(MatPaginator) private _paginator: MatPaginator;
-    @ViewChild(MatSort) private _sort: MatSort;
-
-    customers$: Observable<CustomerObject[]>;
-
+export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
+    customersList: any;
+    customers$: Observable<UserObject[]>;
     flashMessage: 'success' | 'error' | null = null;
     isLoading: boolean = false;
     pagination: InventoryPagination;
@@ -50,6 +55,9 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
     selectedProduct: InventoryProduct | null = null;
     selectedUserForm: FormGroup;
     tagsEditMode: boolean = false;
+    documentType = 'idCard';
+    @ViewChild(MatPaginator) private _paginator: MatPaginator;
+    @ViewChild(MatSort) private _sort: MatSort;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -60,8 +68,7 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
         private _fuseConfirmationService: FuseConfirmationService,
         private _formBuilder: FormBuilder,
         private _inventoryService: UsersService
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -71,32 +78,24 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Create the selected product form
         this.selectedUserForm = this._formBuilder.group({
-            id : [''],
-            loginId : [''],
-            roleName : [''],
-            status : [''],
-            firstName : [''],
-            middleName : [''],
-            lastName : [''],
-            email : [''],
-            phoneNumber : [''],
-            dob : [''],
-            gender : [''],
-            isLoggedIn : [''],
-            idNumber : [''],
-            passport : [''],
-            country : [''],
-            city : [''],
-            homePort : [''],
-            createdBy : [''],
-            createdAt : [''],
-            lastLogin : [''],
-            accountConfirmed : [''],
-            images :[''],
+            userId: [''],
+            loginId: [''],
+            roleId: [''],
+            status: [''],
+            password: [''],
+            isConfirmed: [''],
+            firstName: [''],
+            middleName: [''],
+            surname: [''],
+            idNumber: [''],
+            email: [''],
+            passportNumber: [''],
+            lastLoginDate: [''],
+            isLoggedIn: [''],
+            images: [''],
             currentImageIndex: [0],
         });
 
@@ -112,9 +111,13 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
                 this._changeDetectorRef.markForCheck();
             });
 
-        console.log('in ngOnInit');
+
         // Get the customers
         this.customers$ = this._inventoryService.customers$;
+
+        this._inventoryService.getProducts().subscribe((items) => {
+            this.customersList = items;
+        });
 
         this.customers$.subscribe((item) => {
             console.log(item);
@@ -126,6 +129,8 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
                 takeUntil(this._unsubscribeAll),
                 debounceTime(300),
                 switchMap((query) => {
+                    console.log('query');
+                    console.log(query);
                     this.closeDetails();
                     this.isLoading = true;
                     return this._inventoryService.getProducts(0, 10, 'name', 'asc', query);
@@ -140,14 +145,12 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * After view init
      */
-    ngAfterViewInit(): void
-    {
-        if ( this._sort && this._paginator )
-        {
+    ngAfterViewInit(): void {
+        if (this._sort && this._paginator) {
             // Set the initial sort
             this._sort.sort({
-                id          : 'firstName',
-                start       : 'asc',
+                id: 'firstName',
+                start: 'asc',
                 disableClear: true
             });
 
@@ -182,8 +185,7 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
@@ -198,11 +200,9 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
      *
      * @param productId
      */
-    toggleDetails(productId: string): void
-    {
+    toggleDetails(productId: string): void {
         // If the product is already selected...
-        if ( this.selectedProduct && this.selectedProduct.id === productId )
-        {
+        if (this.selectedProduct && this.selectedProduct.userId === parseInt(productId, 10)) {
             // Close the details
             this.closeDetails();
             return;
@@ -226,16 +226,14 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * Close the details
      */
-    closeDetails(): void
-    {
+    closeDetails(): void {
         this.selectedProduct = null;
     }
 
     /**
      * Cycle through images of selected product
      */
-    cycleImages(forward: boolean = true): void
-    {
+    cycleImages(forward: boolean = true): void {
         // Get the image count and current image index
         const count = this.selectedUserForm.get('images').value.length;
         const currentIndex = this.selectedUserForm.get('currentImageIndex').value;
@@ -245,25 +243,20 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
         const prevIndex = currentIndex - 1 < 0 ? count - 1 : currentIndex - 1;
 
         // If cycling forward...
-        if ( forward )
-        {
+        if (forward) {
             this.selectedUserForm.get('currentImageIndex').setValue(nextIndex);
         }
         // If cycling backwards...
-        else
-        {
+        else {
             this.selectedUserForm.get('currentImageIndex').setValue(prevIndex);
         }
     }
 
 
-
-
     /**
      * Create product
      */
-    createProduct(): void
-    {
+    createProduct(): void {
         // Create the product
         this._inventoryService.createProduct().subscribe((newProduct) => {
 
@@ -281,8 +274,7 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * Update the selected product using the form data
      */
-    updateSelectedProduct(): void
-    {
+    updateSelectedProduct(): void {
         // Get the product object
         const product = this.selectedUserForm.getRawValue();
 
@@ -290,7 +282,7 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
         delete product.currentImageIndex;
 
         // Update the product on the server
-        this._inventoryService.updateProduct(product.id, product).subscribe(() => {
+        this._inventoryService.updateProduct(product.userId, product).subscribe(() => {
 
             // Show a success message
             this.showFlashMessage('success');
@@ -300,15 +292,14 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * Delete the selected product using the form data
      */
-    deleteSelectedProduct(): void
-    {
+    deleteSelectedProduct(): void {
         // Open the confirmation dialog
         const confirmation = this._fuseConfirmationService.open({
-            title  : 'Delete product',
-            message: 'Are you sure you want to remove this product? This action cannot be undone!',
+            title: 'Disable user',
+            message: 'Are you sure you want to disable this user? This user will need to be re-enabled for use later.',
             actions: {
                 confirm: {
-                    label: 'Delete'
+                    label: 'Disable'
                 }
             }
         });
@@ -317,14 +308,13 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
         confirmation.afterClosed().subscribe((result) => {
 
             // If the confirm button pressed...
-            if ( result === 'confirmed' )
-            {
+            if (result === 'confirmed') {
 
                 // Get the product object
                 const product = this.selectedUserForm.getRawValue();
 
                 // Delete the product on the server
-                this._inventoryService.deleteProduct(product.id).subscribe(() => {
+                this._inventoryService.deleteProduct(product.userId).subscribe(() => {
 
                     // Close the details
                     this.closeDetails();
@@ -336,8 +326,7 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * Show flash message
      */
-    showFlashMessage(type: 'success' | 'error'): void
-    {
+    showFlashMessage(type: 'success' | 'error'): void {
         // Show the message
         this.flashMessage = type;
 
@@ -360,8 +349,11 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
-        return item.id || index;
+    trackByFn(index: number, item: any): any {
+        return item.userId || index;
+    }
+
+    documentTypeChanged(value: any): any {
+        this.documentType = value;
     }
 }

@@ -40,7 +40,7 @@
     <!-- Main -->
     <div class="flex flex-auto overflow-hidden">
 
-        <!-- Products list -->
+        <!-- Ferries list -->
         <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
             <ng-container *ngIf="(ferries$ | async) as products">
                 <ng-container *ngIf="products.length > 0; else noProducts">
@@ -161,7 +161,7 @@
 
                             <div class="flex flex-col sm:flex-row p-8">
 
-                                <!-- Product images and status -->
+                                <!-- Ferry images and status -->
                                 <div class="flex flex-col items-center sm:items-start mb-8 sm:mb-0">
                                     <div class="flex flex-col items-center">
                                         <div class="w-32 h-44 border rounded overflow-hidden">
@@ -184,7 +184,7 @@
                                         <mat-slide-toggle
                                             [formControlName]="'status'"
                                             [color]="'primary'">
-                                            {{selectedFerryForm.get('status').value === true ? 'Active' : 'Disabled'}}
+                                            {{selectedFerryForm.get('status').value === true ? 'Active' : 'Inactive'}}
                                         </mat-slide-toggle>
                                     </div>
                                 </div>
@@ -194,13 +194,23 @@
                                     <div class="flex flex-col w-full lg:w-2/4 sm:pl-8">
 
                                         <!-- Name -->
-                                        <div class="flex">
-                                            <mat-form-field class="w-full">
-                                                <mat-label>Ferry Name</mat-label>
-                                                <input
-                                                    matInput
-                                                    [formControlName]="'shipName'">
-                                            </mat-form-field>
+
+                                        <div class="flex flex-col w-full lg:full">
+                                            <div class="flex">
+                                                <mat-form-field class="w-1/2 pr-3">
+                                                    <mat-label>Ferry Name</mat-label>
+                                                    <input
+                                                        matInput
+                                                        [formControlName]="'shipName'">
+                                                </mat-form-field>
+                                                <mat-form-field class="w-1/2">
+                                                    <mat-label>Fleet Number</mat-label>
+                                                    <input
+                                                        matInput
+                                                        [formControlName]="'fleetNumber'">
+                                                </mat-form-field>
+                                            </div>
+
                                         </div>
 
                                         <!-- SKU and Barcode -->
@@ -245,7 +255,7 @@
                                                 <mat-label>Created On</mat-label>
                                                 <input
                                                     matInput readonly
-                                                    [formControlName]="'createdAt'">
+                                                    [formControlName]="'createdOn'">
                                             </mat-form-field>
                                         </div>
 
@@ -271,7 +281,7 @@
                                             <mat-icon
                                                 class="text-green-500"
                                                 [svgIcon]="'heroicons_outline:check'"></mat-icon>
-                                            <span class="ml-2">Product updated</span>
+                                            <span class="ml-2">Ferry updated</span>
                                         </ng-container>
                                         <ng-container *ngIf="flashMessage === 'error'">
                                             <mat-icon

@@ -24,21 +24,21 @@ import {FerriesService} from 'app/modules/app/ferries/inventory/ferries.service'
     styles: [
         /* language=SCSS */
             `
-            .inventory-grid {
-                grid-template-columns: 16.5% 16.5% 16.5%  16.5%  16.5%  16.5%;
-
-                @screen sm {
-                    grid-template-columns: 16.5% 16.5% 16.5%  16.5%  16.5%  16.5% ;
-                }
-
-                @screen md {
-                    grid-template-columns: 16.5% 16.5% 16.5%  16.5%  16.5%  16.5% ;
-                }
-
-                @screen lg {
-                    grid-template-columns: 16.5% 16.5% 16.5%  16.5%  16.5%  16.5% ;
-                }
-            }
+            //.inventory-grid {
+            //    grid-template-columns: 16.5% 16.5% 16.5%  16.5%  16.5%  16.5%;
+            //
+            //    @screen sm {
+            //        grid-template-columns: 16.5% 16.5% 16.5%  16.5%  16.5%  16.5% ;
+            //    }
+            //
+            //    @screen md {
+            //        grid-template-columns: 16.5% 16.5% 16.5%  16.5%  16.5%  16.5% ;
+            //    }
+            //
+            //    @screen lg {
+            //        grid-template-columns: 16.5% 16.5% 16.5%  16.5%  16.5%  16.5% ;
+            //    }
+            //}
         `
     ],
     encapsulation: ViewEncapsulation.None,
@@ -46,6 +46,7 @@ import {FerriesService} from 'app/modules/app/ferries/inventory/ferries.service'
     animations: fuseAnimations
 })
 export class FerryListComponent implements OnInit, AfterViewInit, OnDestroy {
+    ferriesList: any;
     ferries$: Observable<FerryObject[]>;
     flashMessage: 'success' | 'error' | null = null;
     isLoading: boolean = false;
@@ -86,8 +87,11 @@ export class FerryListComponent implements OnInit, AfterViewInit, OnDestroy {
             passengerCapacity: [''],
             cargoCapacity: [''],
             createdBy: [''],
-            createdAt: [''],
+            createdOn: [''],
             images: [''],
+            fleetNumber: [''],
+            updatedBy: [''],
+            updatedOn: ['']
         });
 
         // Get the pagination
@@ -104,12 +108,14 @@ export class FerryListComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // Get the ferries
         this.ferries$ = this._ferryService.ferries$;
-        console.log('this.ferries$ observable');
-        console.log(this.ferries$);
+
         this.ferries$.subscribe((ship) => {
             console.log('ship');
             console.log(ship);
-            });
+        });
+        this._ferryService.getFerries().subscribe((items) => {
+            this.ferriesList = items;
+        });
 
         // Subscribe to search input field value changes
         this.searchInputControl.valueChanges
@@ -132,6 +138,7 @@ export class FerryListComponent implements OnInit, AfterViewInit, OnDestroy {
      * After view init
      */
     ngAfterViewInit(): void {
+
         if (this._sort && this._paginator) {
             // Set the initial sort
             this._sort.sort({
@@ -262,13 +269,15 @@ export class FerryListComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     updateSelectedProduct(): void {
         // Get the product object
-        const product = this.selectedFerryForm.getRawValue();
+        const ferry = this.selectedFerryForm.getRawValue();
+        console.log('ndio hizi ferry details');
+        console.log(ferry);
 
         // Remove the currentImageIndex field
-        delete product.currentImageIndex;
+        delete ferry.images;
 
         // Update the product on the server
-        this._ferryService.updateProduct(product.id, product).subscribe(() => {
+        this._ferryService.updateProduct(ferry.shipId, ferry).subscribe(() => {
 
             // Show a success message
             this.showFlashMessage('success');

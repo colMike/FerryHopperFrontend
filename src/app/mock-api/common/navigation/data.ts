@@ -19,7 +19,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
             //     id: 'user-interface.forms.fields',
             //     title: 'Access Control',
             //     type: 'basic',
-            //     link: ''
+            //     link: '/apps/access-control'
             // },
             {
                 id: 'user-interface.forms.fields',

@@ -73,6 +73,7 @@ export const appRoutes: Route[] = [
                     {path: 'ferries', loadChildren: () => import('app/modules/app/ferries/ferry.module').then(m => m.FerryModule)},
                     {path: 'ports', loadChildren: () => import('app/modules/app/ports/port.module').then(m => m.PortModule)},
                     {path: 'settings', loadChildren: () => import('app/modules/administration/user-profile/settings/settings.module').then(m => m.SettingsModule)},
+                    {path: 'access-control', loadChildren: () => import('app/modules/administration/access-control/access-control.module').then(m => m.AccessControlModule)},
                 ]},
 
             // Reports
