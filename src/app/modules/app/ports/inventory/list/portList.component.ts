@@ -16,18 +16,18 @@ import { CustomersService } from 'app/modules/app/customers/inventory/customers.
         /* language=SCSS */
         `
             .inventory-grid {
-                grid-template-columns: 20% 20% 20%  20%  20%;
+                grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5%;
 
                 @screen sm {
-                    grid-template-columns: 20% 20% 20%  20%  20%;
+                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
                 }
 
                 @screen md {
-                    grid-template-columns: 20% 20% 20%  20%  20%  20% ;
+                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
                 }
 
                 @screen lg {
-                    grid-template-columns: 20% 20% 20%  20%  20%  20%;
+                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
                 }
             }
         `

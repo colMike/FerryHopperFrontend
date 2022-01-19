@@ -24,21 +24,21 @@ import {FerriesService} from 'app/modules/app/ferries/inventory/ferries.service'
     styles: [
         /* language=SCSS */
             `
-            //.inventory-grid {
-            //    grid-template-columns: 16.5% 16.5% 16.5%  16.5%  16.5%  16.5%;
-            //
-            //    @screen sm {
-            //        grid-template-columns: 16.5% 16.5% 16.5%  16.5%  16.5%  16.5% ;
-            //    }
-            //
-            //    @screen md {
-            //        grid-template-columns: 16.5% 16.5% 16.5%  16.5%  16.5%  16.5% ;
-            //    }
-            //
-            //    @screen lg {
-            //        grid-template-columns: 16.5% 16.5% 16.5%  16.5%  16.5%  16.5% ;
-            //    }
-            //}
+            .inventory-grid {
+                grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5%;
+
+                @screen sm {
+                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                }
+
+                @screen md {
+                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                }
+
+                @screen lg {
+                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                }
+            }
         `
     ],
     encapsulation: ViewEncapsulation.None,
