@@ -17,18 +17,18 @@ import {useAnimation} from '@angular/animations';
         /* language=SCSS */
         `
             .inventory-grid {
-                grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5%;
+                grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5%;
 
                 @screen sm {
-                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                    grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5% ;
                 }
 
                 @screen md {
-                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                    grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5% ;
                 }
 
                 @screen lg {
-                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                    grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5% ;
                 }
             }
         `

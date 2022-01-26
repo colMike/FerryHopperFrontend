@@ -17,6 +17,8 @@ import {fuseAnimations} from '@fuse/animations';
 import {FuseConfirmationService} from '@fuse/services/confirmation';
 import {FerryObject, InventoryPagination, InventoryProduct} from 'app/modules/app/ferries/inventory/ferries.types';
 import {FerriesService} from 'app/modules/app/ferries/inventory/ferries.service';
+import {FuseAddUserService} from "../../../../../shared/addUser";
+import {FuseAddFerryService} from "../../../../../shared/addFerry";
 
 @Component({
     selector: 'inventory-list',
@@ -25,18 +27,18 @@ import {FerriesService} from 'app/modules/app/ferries/inventory/ferries.service'
         /* language=SCSS */
             `
             .inventory-grid {
-                grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5%;
+                grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5%;
 
                 @screen sm {
-                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                    grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5% ;
                 }
 
                 @screen md {
-                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                    grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5% ;
                 }
 
                 @screen lg {
-                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                    grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5% ;
                 }
             }
         `
@@ -65,6 +67,7 @@ export class FerryListComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseConfirmationService: FuseConfirmationService,
+        private _addFerryDialog: FuseAddFerryService,
         private _formBuilder: FormBuilder,
         private _ferryService: FerriesService
     ) {
@@ -251,7 +254,7 @@ export class FerryListComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     createProduct(): void {
         // Create the product
-        this._ferryService.createProduct().subscribe((newProduct) => {
+        this._ferryService.createProduct(null).subscribe((newProduct) => {
 
             // Go to new product
             this.selectedProduct = newProduct;
@@ -346,5 +349,46 @@ export class FerryListComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    addNewFerryDialog(): void {
+        // Open the confirmation dialog
+        const addUserAction = this._addFerryDialog.open({
+            title: 'Add new Ferry',
+            message: 'Fill in this form to add a new Ferry',
+            actions: {
+                confirm: {
+                    label: 'Add Ferry'
+                }
+            }
+        });
+
+        // Subscribe to the confirmation dialog closed action
+        addUserAction.afterClosed().subscribe((result) => {
+
+            console.log('here is the result');
+            console.log(result);
+            // If the confirm button pressed...
+            if (result.ferry) {
+
+                // create object for post request
+                const requestBody = {
+                    'head': {
+                        'userId': 'PDD001',
+                        'requestId': 'XXXXXXXXXXXXX',
+                        'status': '',
+                        'message': ''
+                    },
+                    'body': {ferry: result.ferry}
+                };
+
+                // Delete the product on the server
+                this._ferryService.createProduct(requestBody).subscribe(() => {
+
+                    // Close the details
+                    this.closeDetails();
+                });
+            }
+        });
     }
 }

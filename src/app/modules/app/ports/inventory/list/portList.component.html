@@ -30,8 +30,8 @@
                 class="ml-4"
                 mat-flat-button
                 [color]="'primary'"
-                (click)="createProduct()">
-                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                (click)="addNewPortDialog()">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'" click></mat-icon>
                 <span class="ml-2 mr-1">Add</span>
             </button>
         </div>
@@ -50,25 +50,27 @@
                             class="table-auto justify-between inventory-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
                             matSort
                             matSortDisableClear>
+
+                            <div class="hidden md:block truncate"></div>
                             <div
                                 class="hidden md:block truncate"
-                                [mat-sort-header]="'id'">
+                                [mat-sort-header]="'portId'">
                                 ID.
                             </div>
                             <div
                                 class="hidden md:block truncate"
-                                [mat-sort-header]="'firstName'">
+                                [mat-sort-header]="'name'">
                                 Port Name
                             </div>
                             <div
                                 class="hidden md:block truncate"
-                                [mat-sort-header]="'middleName'">
+                                [mat-sort-header]="'geolocation'">
                                 Geolocation Details
                             </div>
 
                             <div
                                 class="hidden md:block items-center content-center"
-                                [mat-sort-header]="'active'">
+                                [mat-sort-header]="'status'">
                                 Status
                             </div>
                             <div class="hidden md:block items-center content-center">Details</div>
@@ -78,30 +80,32 @@
                             <ng-container *ngFor="let customer of customers; trackBy: trackByFn">
                                 <div class="inventory-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b">
 
+                                    <div class="hidden md:block truncate">
+                                    </div>
 
                                     <!-- SKU -->
                                     <div class="hidden md:block truncate">
-                                        {{customer.id}}
+                                        {{customer.portId}}
                                     </div>
 
                                     <!-- First Name -->
                                     <div class="hidden md:block truncate">
-                                        {{customer.firstName}}
+                                        {{customer.name}}
                                     </div>
 
                                     <!-- Email -->
                                     <div class="hidden md:block truncate">
-                                        <div class="min-w-4">{{customer.email}}</div>
+                                        <div class="min-w-4">{{customer.geolocation}}</div>
                                     </div>
 
                                     <!-- Active -->
                                     <div class="hidden md:block grid grid-cols-3 gap-4 content-center">
-                                        <ng-container *ngIf="customer.active">
+                                        <ng-container *ngIf="customer.status">
                                             <mat-icon
                                                 class="text-green-400 icon-size-5"
                                                 [svgIcon]="'heroicons_solid:check'"></mat-icon>
                                         </ng-container>
-                                        <ng-container *ngIf="!customer.active">
+                                        <ng-container *ngIf="!customer.status">
                                             <mat-icon
                                                 class="text-gray-400 icon-size-5"
                                                 [svgIcon]="'heroicons_solid:x'"></mat-icon>
@@ -113,15 +117,15 @@
                                         <button
                                             class="min-w-10 min-h-7 h-7 px-2 leading-6"
                                             mat-stroked-button
-                                            (click)="toggleDetails(customer.id)">
+                                            (click)="toggleDetails(customer.portId)">
                                             <mat-icon
                                                 class="icon-size-5"
-                                                [svgIcon]="selectedProduct?.id === customer.id ? 'heroicons_solid:chevron-up' : 'heroicons_solid:chevron-down'"></mat-icon>
+                                                [svgIcon]="selectedProduct?.portId === customer.portId ? 'heroicons_solid:chevron-up' : 'heroicons_solid:chevron-down'"></mat-icon>
                                         </button>
                                     </div>
                                 </div>
                                 <div class="grid">
-                                    <ng-container *ngIf="selectedProduct?.id === customer.id">
+                                    <ng-container *ngIf="selectedProduct?.portId === customer.portId">
                                         <ng-container
                                             *ngTemplateOutlet="rowDetailsTemplate; context: {$implicit: customer}"></ng-container>
                                     </ng-container>
@@ -192,7 +196,7 @@
                                                 <mat-label>Port Name</mat-label>
                                                 <input
                                                     matInput
-                                                    [formControlName]="'portName'">
+                                                    [formControlName]="'name'">
                                             </mat-form-field>
                                         </div>
 
@@ -232,7 +236,7 @@
                                                 <mat-label>Created On</mat-label>
                                                 <input
                                                     matInput readonly
-                                                    [formControlName]="'createdAt'">
+                                                    [formControlName]="'createdOn'">
                                             </mat-form-field>
                                         </div>
 

@@ -14,18 +14,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
-import { PortsComponent } from    'app/modules/app/ports/inventory/ports.component';
-import { PortListComponent } from 'app/modules/app/ports/inventory/list/portList.component';
-import { portRoutes } from 'app/modules/app/ports/port.routing';
+import { feeRoutes } from 'app/modules/app/fees/fee.routing';
 import {FuseAddPortService} from '../../../shared/addPort';
+import {FeeListComponent} from './inventory/list/feeList.component';
+import {FeesComponent} from './inventory/fees.component';
 
 @NgModule({
     declarations: [
-        PortListComponent,
-        PortsComponent
+        FeeListComponent,
+        FeesComponent
     ],
     imports     : [
-        RouterModule.forChild(portRoutes),
+        RouterModule.forChild(feeRoutes),
         MatButtonModule,
         MatCheckboxModule,
         MatFormFieldModule,
@@ -42,6 +42,6 @@ import {FuseAddPortService} from '../../../shared/addPort';
         SharedModule
     ]
 })
-export class PortModule
+export class FeeModule
 {
 }

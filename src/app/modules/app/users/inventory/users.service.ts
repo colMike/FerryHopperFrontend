@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import {
@@ -81,6 +81,7 @@ export class UsersService
         };
 
         console.log('In Get products function');
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         return this._httpClient.post<any>(environment.apiUrl + '/users', body
         // return this._httpClient.get<{ pagination: InventoryPagination; customers: UserObject[] }>('api/apps/ecommerce/inventory/customers', {
         //     params: {
@@ -134,36 +135,12 @@ export class UsersService
     /**
      * Create product
      */
-    createProduct(): Observable<UserObject>
+    createProduct(requestBody): Observable<UserObject>
     {
-        const body = {
-            'head': {
-                'userId': 'PDD001',
-                'requestId': 'XXXXXXXXXXXXX',
-                'status': '',
-                'message': ''
-            },
-            'body': {
-                'user': {
-                    'loginId': '',
-                    'roleId': 0,
-                    'status': 0,
-                    'password': '',
-                    'isConfirmed': false,
-                    'firstName': '',
-                    'middleName': '',
-                    'surname': '',
-                    'idNumber': '',
-                    'email': '',
-                    'passportNumber': '',
-                    'lastLoginDate': '',
-                    'isLoggedIn': false
-                }
-            }
-        };
+
         return this.customers$.pipe(
             take(1),
-            switchMap(products => this._httpClient.post<UserObject>(environment.apiUrl + '/create-user', body).pipe(
+            switchMap(products => this._httpClient.post<UserObject>(environment.apiUrl + '/create-user', requestBody).pipe(
                 map((newProduct) => {
 
                     // Update the products with the new product
@@ -182,8 +159,11 @@ export class UsersService
      * @param id
      * @param product
      */
-    updateProduct(id: string, product: UserObject): Observable<UserObject>
+    updateProduct(id: string, user: UserObject): Observable<UserObject>
     {
+        console.log('trying to update product');
+        console.log(user);
+
         const body = {
             'head': {
                 'userId': 'PDD001',
@@ -192,22 +172,7 @@ export class UsersService
                 'message': ''
             },
             'body': {
-                'user': {
-                    'userId': 0,
-                    'loginId': 'PDD002',
-                    'roleId': 1,
-                    'status': 0,
-                    'password': 'ttyyyy',
-                    'isConfirmed': true,
-                    'firstName': 'Jonah',
-                    'middleName': 'Kimani',
-                    'surname': 'Njore',
-                    'idNumber': '1234546789',
-                    'email': 'davydd@gmail.com',
-                    'passportNumber': '489649IEUI',
-                    'lastLoginDate': '',
-                    'isLoggedIn': true
-                }
+                'user': user
             }
         };
 
@@ -216,7 +181,7 @@ export class UsersService
 
             switchMap(products => this._httpClient.post<UserObject>(environment.apiUrl + '/create-user', body
 
-                // switchMap(products => this._httpClient.patch<UserObject>('api/apps/ecommerce/inventory/customer', {
+            //     switchMap(products => this._httpClient.patch<UserObject>('api/apps/ecommerce/inventory/customer', {
             //     id,
             //     product
             // }

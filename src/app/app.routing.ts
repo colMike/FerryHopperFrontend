@@ -72,6 +72,7 @@ export const appRoutes: Route[] = [
                     {path: 'portal-user', loadChildren: () => import('app/modules/app/users/portalUsers.module').then(m => m.PortalUsersModule)},
                     {path: 'ferries', loadChildren: () => import('app/modules/app/ferries/ferry.module').then(m => m.FerryModule)},
                     {path: 'ports', loadChildren: () => import('app/modules/app/ports/port.module').then(m => m.PortModule)},
+                    {path: 'fees', loadChildren: () => import('app/modules/app/fees/fee.module').then(m => m.FeeModule)},
                     {path: 'settings', loadChildren: () => import('app/modules/administration/user-profile/settings/settings.module').then(m => m.SettingsModule)},
                     {path: 'access-control', loadChildren: () => import('app/modules/administration/access-control/access-control.module').then(m => m.AccessControlModule)},
                 ]},

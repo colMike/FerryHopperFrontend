@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { PortsService } from 'app/modules/app/ports/inventory/ports.service';
+import { FeesService } from 'app/modules/app/fees/inventory/fees.service';
 import {
     CustomerObject,
     InventoryPagination,
     InventoryProduct
-} from 'app/modules/app/ports/inventory/ports.types';
+} from 'app/modules/app/fees/inventory/fees.types';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +17,7 @@ export class InventoryBrandsResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _inventoryService: PortsService)
+    constructor(private _inventoryService: FeesService)
     {
     }
 
@@ -46,7 +46,7 @@ export class InventoryCategoriesResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _inventoryService: PortsService)
+    constructor(private _inventoryService: FeesService)
     {
     }
 
@@ -68,7 +68,7 @@ export class InventoryProductResolver implements Resolve<any>
      * Constructor
      */
     constructor(
-        private _inventoryService: PortsService,
+        private _inventoryService: FeesService,
         private _router: Router
     )
     {
@@ -115,7 +115,7 @@ export class InventoryProductsResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _inventoryService: PortsService)
+    constructor(private _inventoryService: FeesService)
     {
     }
 
@@ -143,7 +143,7 @@ export class InventoryTagsResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _inventoryService: PortsService)
+    constructor(private _inventoryService: FeesService)
     {
     }
 
@@ -161,7 +161,7 @@ export class InventoryVendorsResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _inventoryService: PortsService)
+    constructor(private _inventoryService: FeesService)
     {
     }
 

@@ -251,13 +251,13 @@
 
                                         <!-- SKU and Barcode -->
                                         <div class="flex">
-                                            <mat-form-field class="w-1/3 pr-2">
+                                            <mat-form-field class="w-2/3 pr-2" *ngIf="documentType ==='idCard'">
                                                 <mat-label>Id Number</mat-label>
                                                 <input
                                                     matInput
                                                     [formControlName]="'id'">
                                             </mat-form-field>
-                                            <mat-form-field class="w-1/3 pr-2">
+                                            <mat-form-field class="w-2/3 pr-2" *ngIf="documentType ==='passport'">
                                                 <mat-label>Passport</mat-label>
                                                 <input
                                                     matInput

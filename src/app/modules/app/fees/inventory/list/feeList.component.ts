@@ -1,30 +1,21 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {merge, Observable, Subject} from 'rxjs';
-import {debounceTime, map, switchMap, takeUntil} from 'rxjs/operators';
-import {fuseAnimations} from '@fuse/animations';
-import {FuseConfirmationService} from '@fuse/services/confirmation';
-import {FuseAddUserService} from 'app/shared/addUser';
-import {InventoryPagination, InventoryProduct, UserObject} from 'app/modules/app/users/inventory/users.types';
-import {UsersService} from 'app/modules/app/users/inventory/users.service';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { merge, Observable, Subject } from 'rxjs';
+import { debounceTime, map, switchMap, takeUntil } from 'rxjs/operators';
+import { fuseAnimations } from '@fuse/animations';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { InventoryPagination, InventoryProduct, CustomerObject} from 'app/modules/app/fees/inventory/fees.types';
+import { FeesService } from 'app/modules/app/fees/inventory/fees.service';
+import {FuseAddPortService} from '../../../../../shared/addPort';
 
 @Component({
-    selector: 'inventory-list',
-    templateUrl: './userList.component.html',
-    styles: [
+    selector       : 'inventory-list',
+    templateUrl    : './feeList.component.html',
+    styles         : [
         /* language=SCSS */
-            `
+        `
             .inventory-grid {
                 grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5%;
 
@@ -42,23 +33,25 @@ import {UsersService} from 'app/modules/app/users/inventory/users.service';
             }
         `
     ],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: fuseAnimations
+    animations     : fuseAnimations
 })
-export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
-    customersList: any;
-    customers$: Observable<UserObject[]>;
+export class FeeListComponent implements OnInit, AfterViewInit, OnDestroy
+{
+    @ViewChild(MatPaginator) private _paginator: MatPaginator;
+    @ViewChild(MatSort) private _sort: MatSort;
+
+    feesList: any;
+    customers$: Observable<CustomerObject[]>;
+
     flashMessage: 'success' | 'error' | null = null;
     isLoading: boolean = false;
     pagination: InventoryPagination;
     searchInputControl: FormControl = new FormControl();
     selectedProduct: InventoryProduct | null = null;
-    selectedUserForm: FormGroup;
+    selectedFeeForm: FormGroup;
     tagsEditMode: boolean = false;
-    documentType = 'idCard';
-    @ViewChild(MatPaginator) private _paginator: MatPaginator;
-    @ViewChild(MatSort) private _sort: MatSort;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -67,10 +60,11 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseConfirmationService: FuseConfirmationService,
-        private _addUserDialog: FuseAddUserService,
+        private _addPortDialog: FuseAddPortService,
         private _formBuilder: FormBuilder,
-        private _inventoryService: UsersService
-    ) {
+        private _inventoryService: FeesService
+    )
+    {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -80,25 +74,22 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * On init
      */
-    ngOnInit(): void {
+    ngOnInit(): void
+    {
         // Create the selected product form
-        this.selectedUserForm = this._formBuilder.group({
-            userId: [''],
-            loginId: [''],
-            roleId: [''],
+        this.selectedFeeForm = this._formBuilder.group({
+            feeId: [''],
+            itemType: [''],
+            description: [''],
+            departurePort: [''],
+            destinationPort: [''],
+            cost: [''],
             status: [''],
-            password: [''],
-            isConfirmed: [''],
-            firstName: [''],
-            middleName: [''],
-            surname: [''],
-            idNumber: [''],
-            email: [''],
-            passportNumber: [''],
-            lastLoginDate: [''],
-            isLoggedIn: [''],
-            images: [''],
-            currentImageIndex: [0],
+            createdBy: [''],
+            createdOn: [''],
+            updatedBy: [''],
+            updatedOn: [''],
+            images :[''],
         });
 
         // Get the pagination
@@ -113,16 +104,13 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this._changeDetectorRef.markForCheck();
             });
 
-
         // Get the customers
         this.customers$ = this._inventoryService.customers$;
-
-        this._inventoryService.getProducts().subscribe((items) => {
-            this.customersList = items;
-        });
-
         this.customers$.subscribe((item) => {
             console.log(item);
+        });
+        this._inventoryService.getProducts().subscribe((items) => {
+            this.feesList = items;
         });
 
         // Subscribe to search input field value changes
@@ -131,8 +119,6 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
                 takeUntil(this._unsubscribeAll),
                 debounceTime(300),
                 switchMap((query) => {
-                    console.log('query');
-                    console.log(query);
                     this.closeDetails();
                     this.isLoading = true;
                     return this._inventoryService.getProducts(0, 10, 'name', 'asc', query);
@@ -147,12 +133,14 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * After view init
      */
-    ngAfterViewInit(): void {
-        if (this._sort && this._paginator) {
+    ngAfterViewInit(): void
+    {
+        if ( this._sort && this._paginator )
+        {
             // Set the initial sort
             this._sort.sort({
-                id: 'firstName',
-                start: 'asc',
+                id          : 'firstName',
+                start       : 'asc',
                 disableClear: true
             });
 
@@ -187,7 +175,8 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * On destroy
      */
-    ngOnDestroy(): void {
+    ngOnDestroy(): void
+    {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
@@ -202,9 +191,11 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @param productId
      */
-    toggleDetails(productId: string): void {
+    toggleDetails(productId: string): void
+    {
         // If the product is already selected...
-        if (this.selectedProduct && this.selectedProduct.userId === parseInt(productId, 10)) {
+        if ( this.selectedProduct && this.selectedProduct.feeId === parseInt(productId, 10) )
+        {
             // Close the details
             this.closeDetails();
             return;
@@ -218,7 +209,7 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.selectedProduct = product;
 
                 // Fill the form
-                this.selectedUserForm.patchValue(product);
+                this.selectedFeeForm.patchValue(product);
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -228,37 +219,44 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Close the details
      */
-    closeDetails(): void {
+    closeDetails(): void
+    {
         this.selectedProduct = null;
     }
 
     /**
      * Cycle through images of selected product
      */
-    cycleImages(forward: boolean = true): void {
+    cycleImages(forward: boolean = true): void
+    {
         // Get the image count and current image index
-        const count = this.selectedUserForm.get('images').value.length;
-        const currentIndex = this.selectedUserForm.get('currentImageIndex').value;
+        const count = this.selectedFeeForm.get('images').value.length;
+        const currentIndex = this.selectedFeeForm.get('currentImageIndex').value;
 
         // Calculate the next and previous index
         const nextIndex = currentIndex + 1 === count ? 0 : currentIndex + 1;
         const prevIndex = currentIndex - 1 < 0 ? count - 1 : currentIndex - 1;
 
         // If cycling forward...
-        if (forward) {
-            this.selectedUserForm.get('currentImageIndex').setValue(nextIndex);
+        if ( forward )
+        {
+            this.selectedFeeForm.get('currentImageIndex').setValue(nextIndex);
         }
         // If cycling backwards...
-        else {
-            this.selectedUserForm.get('currentImageIndex').setValue(prevIndex);
+        else
+        {
+            this.selectedFeeForm.get('currentImageIndex').setValue(prevIndex);
         }
     }
+
+
 
 
     /**
      * Create product
      */
-    createProduct(): void {
+    createProduct(): void
+    {
         // Create the product
         this._inventoryService.createProduct(null).subscribe((newProduct) => {
 
@@ -266,7 +264,7 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
             this.selectedProduct = newProduct;
 
             // Fill the form
-            this.selectedUserForm.patchValue(newProduct);
+            this.selectedFeeForm.patchValue(newProduct);
 
             // Mark for check
             this._changeDetectorRef.markForCheck();
@@ -276,15 +274,16 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Update the selected product using the form data
      */
-    updateSelectedProduct(): void {
+    updateSelectedProduct(): void
+    {
         // Get the product object
-        const product = this.selectedUserForm.getRawValue();
+        const product = this.selectedFeeForm.getRawValue();
 
         // Remove the currentImageIndex field
         delete product.currentImageIndex;
 
         // Update the product on the server
-        this._inventoryService.updateProduct(product.userId, product).subscribe(() => {
+        this._inventoryService.updateProduct(product.feeId, product).subscribe(() => {
 
             // Show a success message
             this.showFlashMessage('success');
@@ -294,14 +293,15 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Delete the selected product using the form data
      */
-    deleteSelectedProduct(): void {
+    deleteSelectedProduct(): void
+    {
         // Open the confirmation dialog
         const confirmation = this._fuseConfirmationService.open({
-            title: 'Disable user',
-            message: 'Are you sure you want to disable this user? This user will need to be re-enabled for use later.',
+            title  : 'Delete product',
+            message: 'Are you sure you want to remove this product? This action cannot be undone!',
             actions: {
                 confirm: {
-                    label: 'Disable'
+                    label: 'Delete'
                 }
             }
         });
@@ -310,13 +310,14 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
         confirmation.afterClosed().subscribe((result) => {
 
             // If the confirm button pressed...
-            if (result === 'confirmed') {
+            if ( result === 'confirmed' )
+            {
 
                 // Get the product object
-                const product = this.selectedUserForm.getRawValue();
+                const product = this.selectedFeeForm.getRawValue();
 
                 // Delete the product on the server
-                this._inventoryService.deleteProduct(product.userId).subscribe(() => {
+                this._inventoryService.deleteProduct(product.feeId).subscribe(() => {
 
                     // Close the details
                     this.closeDetails();
@@ -328,7 +329,8 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Show flash message
      */
-    showFlashMessage(type: 'success' | 'error'): void {
+    showFlashMessage(type: 'success' | 'error'): void
+    {
         // Show the message
         this.flashMessage = type;
 
@@ -351,33 +353,32 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any {
-        return item.userId || index;
+    trackByFn(index: number, item: any): any
+    {
+        return item.feeId || index;
     }
 
-    documentTypeChanged(value: any): any {
-        this.documentType = value;
-    }
+    addNewPortDialog(): void {
 
-    addNewUserDialog(): void {
+        console.log('Here we are');
         // Open the confirmation dialog
-        const addUserAction = this._addUserDialog.open({
-            title: 'Add new User',
-            message: 'Fill in this form to add a new User',
+        const addPortAction = this._addPortDialog.open({
+            title: 'Add new Port',
+            message: 'Fill in this form to add a new Port',
             actions: {
                 confirm: {
-                    label: 'Add User'
+                    label: 'Add Port'
                 }
             }
         });
 
         // Subscribe to the confirmation dialog closed action
-        addUserAction.afterClosed().subscribe((result) => {
+        addPortAction.afterClosed().subscribe((result) => {
 
             console.log('here is the result');
             console.log(result);
             // If the confirm button pressed...
-            if (result.user) {
+            if (result.port) {
 
                 // create object for post request
                 const requestBody = {
@@ -387,7 +388,7 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
                         'status': '',
                         'message': ''
                     },
-                    'body': {user: result.user}
+                    'body': {port: result.port}
                 };
 
                 // Delete the product on the server
@@ -399,5 +400,4 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         });
     }
-
 }

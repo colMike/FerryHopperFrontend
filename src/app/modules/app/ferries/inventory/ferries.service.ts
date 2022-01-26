@@ -116,6 +116,7 @@ export class FerriesService
                 // Find the product
                 const product = products.find(item => item.shipId === id) || null;
 
+
                 // Update the product
                 this._ferry.next(product);
 
@@ -137,11 +138,11 @@ export class FerriesService
     /**
      * Create product
      */
-    createProduct(): Observable<FerryObject>
+    createProduct(requestBody): Observable<FerryObject>
     {
         return this.ferries$.pipe(
             take(1),
-            switchMap(products => this._httpClient.post<FerryObject>('api/apps/ecommerce/inventory/customer', {}).pipe(
+            switchMap(products => this._httpClient.post<FerryObject>('api/apps/ecommerce/inventory/customer', requestBody).pipe(
                 map((newProduct) => {
 
                     // Update the products with the new product

@@ -13,6 +13,13 @@ import { mockApiServices } from 'app/mock-api';
 import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {BasicAuthInterceptor} from './modules/auth/BasicAuthInterceptor';
+import {FuseAddPortService} from './shared/addPort';
+import {FuseAddUserService} from './shared/addUser';
+import {FuseAddFerryService} from './shared/addFerry';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatSelectModule} from '@angular/material/select';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
@@ -41,9 +48,21 @@ const routerConfig: ExtraOptions = {
 
         FormsModule,
         ReactiveFormsModule,
+        MatDialogModule,
+        MatSelectModule,
 
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({})
+    ],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: BasicAuthInterceptor,
+            multi: true
+        },
+        FuseAddPortService,
+        FuseAddFerryService,
+        FuseAddUserService
     ],
     bootstrap   : [
         AppComponent

@@ -67,7 +67,7 @@ export class AuthMockApi
             .reply(({request}) => {
 
                 // Sign in successful
-                if ( request.body.email === 'hughes.brian@company.com' || request.body.email === 'mike@gmail.com' && request.body.password === 'admin' )
+                if ( request.body.email === 'hughes.brian@company.com' || request.body.email === 'mike@gmail.com' && request.body.password === 'admin' || request.body.email === 'admin@ferryHopper.com' && request.body.password === 'admin' )
                 {
                     return [
                         200,
@@ -160,6 +160,10 @@ export class AuthMockApi
             });
     }
 
+    returnJWTToken(): string {
+        return 'test';
+    }
+
     // -----------------------------------------------------------------------------------------------------
     // @ Private methods
     // -----------------------------------------------------------------------------------------------------
@@ -194,7 +198,7 @@ export class AuthMockApi
      *
      * @private
      */
-    private _generateJWTToken(): string
+    _generateJWTToken(): string
     {
         // Define token header
         const header = {

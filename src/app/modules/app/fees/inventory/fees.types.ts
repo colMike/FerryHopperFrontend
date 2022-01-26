@@ -1,12 +1,16 @@
 export interface InventoryProduct
 {
-    portId?: number;
-    name?: string;
+    feeId?: number;
+    itemType?: number;
     description?: string;
-    geolocation?: string;
+    departurePort?: number;
+    destinationPort?: number;
+    cost?: number;
+    status?: number;
     createdBy?: number;
     createdOn?: string;
-    status?: number;
+    updatedBy?: string;
+    updatedOn?: string;
     thumbnail: string;
     images: string[];
     active: boolean;
@@ -24,13 +28,17 @@ export interface InventoryPagination
 
 export interface CustomerObject
 {
-    portId?: number;
-    name?: string;
+    feeId?: number;
+    itemType?: number;
     description?: string;
-    geolocation?: string;
+    departurePort?: number;
+    destinationPort?: number;
+    cost?: number;
+    status?: number;
     createdBy?: number;
     createdOn?: string;
-    status?: number;
+    updatedBy?: string;
+    updatedOn?: string;
     thumbnail: string;
     images: string[];
     active: boolean;

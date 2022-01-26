@@ -80,6 +80,21 @@ export const defaultNavigation: FuseNavigationItem[] = [
 
     {
         id: 'user-interface.forms',
+        title: 'Fees',
+        type: 'collapsable',
+        icon: 'heroicons_outline:cash',
+        children: [
+            {
+                id: 'user-interface.forms.fields',
+                title: 'Fees',
+                type: 'basic',
+                link: '/apps/fees/inventory'
+            }
+        ]
+    },
+
+    {
+        id: 'user-interface.forms',
         title: 'Reports',
         type: 'collapsable',
         icon: 'heroicons_outline:user-group',

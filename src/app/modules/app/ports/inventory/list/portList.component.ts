@@ -6,8 +6,9 @@ import { merge, Observable, Subject } from 'rxjs';
 import { debounceTime, map, switchMap, takeUntil } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { InventoryPagination, InventoryProduct, CustomerObject} from 'app/modules/app/customers/inventory/customers.types';
-import { CustomersService } from 'app/modules/app/customers/inventory/customers.service';
+import { InventoryPagination, InventoryProduct, CustomerObject} from 'app/modules/app/ports/inventory/ports.types';
+import { PortsService } from 'app/modules/app/ports/inventory/ports.service';
+import {FuseAddPortService} from '../../../../../shared/addPort';
 
 @Component({
     selector       : 'inventory-list',
@@ -16,18 +17,18 @@ import { CustomersService } from 'app/modules/app/customers/inventory/customers.
         /* language=SCSS */
         `
             .inventory-grid {
-                grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5%;
+                grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5%;
 
                 @screen sm {
-                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                    grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5% ;
                 }
 
                 @screen md {
-                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                    grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5% ;
                 }
 
                 @screen lg {
-                    grid-template-columns: 14.5% 14.5% 14.5%  14.5%  14.5%  14.5%  14.5%  14.5% ;
+                    grid-template-columns: 12.5% 12.5% 12.5%  12.5%  12.5%  12.5%  12.5%  12.5% 12.5% ;
                 }
             }
         `
@@ -41,6 +42,7 @@ export class PortListComponent implements OnInit, AfterViewInit, OnDestroy
     @ViewChild(MatPaginator) private _paginator: MatPaginator;
     @ViewChild(MatSort) private _sort: MatSort;
 
+    portsList: any;
     customers$: Observable<CustomerObject[]>;
 
     flashMessage: 'success' | 'error' | null = null;
@@ -58,8 +60,9 @@ export class PortListComponent implements OnInit, AfterViewInit, OnDestroy
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseConfirmationService: FuseConfirmationService,
+        private _addPortDialog: FuseAddPortService,
         private _formBuilder: FormBuilder,
-        private _inventoryService: CustomersService
+        private _inventoryService: PortsService
     )
     {
     }
@@ -75,13 +78,13 @@ export class PortListComponent implements OnInit, AfterViewInit, OnDestroy
     {
         // Create the selected product form
         this.selectedCustomerForm = this._formBuilder.group({
-            id : [''],
-            portName : [''],
-            description : [''],
-            status : [''],
-            geolocation : [''],
-            createdBy : [''],
-            createdAt : [''],
+            portId: [''],
+            name: [''],
+            description: [''],
+            geolocation: [''],
+            createdBy: [''],
+            createdOn: [''],
+            status: [''],
             images :[''],
         });
 
@@ -101,6 +104,9 @@ export class PortListComponent implements OnInit, AfterViewInit, OnDestroy
         this.customers$ = this._inventoryService.customers$;
         this.customers$.subscribe((item) => {
             console.log(item);
+        });
+        this._inventoryService.getProducts().subscribe((items) => {
+            this.portsList = items;
         });
 
         // Subscribe to search input field value changes
@@ -184,7 +190,7 @@ export class PortListComponent implements OnInit, AfterViewInit, OnDestroy
     toggleDetails(productId: string): void
     {
         // If the product is already selected...
-        if ( this.selectedProduct && this.selectedProduct.id === productId )
+        if ( this.selectedProduct && this.selectedProduct.portId === parseInt(productId, 10) )
         {
             // Close the details
             this.closeDetails();
@@ -248,7 +254,7 @@ export class PortListComponent implements OnInit, AfterViewInit, OnDestroy
     createProduct(): void
     {
         // Create the product
-        this._inventoryService.createProduct().subscribe((newProduct) => {
+        this._inventoryService.createProduct(null).subscribe((newProduct) => {
 
             // Go to new product
             this.selectedProduct = newProduct;
@@ -273,7 +279,7 @@ export class PortListComponent implements OnInit, AfterViewInit, OnDestroy
         delete product.currentImageIndex;
 
         // Update the product on the server
-        this._inventoryService.updateProduct(product.id, product).subscribe(() => {
+        this._inventoryService.updateProduct(product.portId, product).subscribe(() => {
 
             // Show a success message
             this.showFlashMessage('success');
@@ -307,7 +313,7 @@ export class PortListComponent implements OnInit, AfterViewInit, OnDestroy
                 const product = this.selectedCustomerForm.getRawValue();
 
                 // Delete the product on the server
-                this._inventoryService.deleteProduct(product.id).subscribe(() => {
+                this._inventoryService.deleteProduct(product.portId).subscribe(() => {
 
                     // Close the details
                     this.closeDetails();
@@ -345,6 +351,49 @@ export class PortListComponent implements OnInit, AfterViewInit, OnDestroy
      */
     trackByFn(index: number, item: any): any
     {
-        return item.id || index;
+        return item.portId || index;
+    }
+
+    addNewPortDialog(): void {
+
+        console.log('Here we are');
+        // Open the confirmation dialog
+        const addPortAction = this._addPortDialog.open({
+            title: 'Add new Port',
+            message: 'Fill in this form to add a new Port',
+            actions: {
+                confirm: {
+                    label: 'Add Port'
+                }
+            }
+        });
+
+        // Subscribe to the confirmation dialog closed action
+        addPortAction.afterClosed().subscribe((result) => {
+
+            console.log('here is the result');
+            console.log(result);
+            // If the confirm button pressed...
+            if (result.port) {
+
+                // create object for post request
+                const requestBody = {
+                    'head': {
+                        'userId': 'PDD001',
+                        'requestId': 'XXXXXXXXXXXXX',
+                        'status': '',
+                        'message': ''
+                    },
+                    'body': {port: result.port}
+                };
+
+                // Delete the product on the server
+                this._inventoryService.createProduct(requestBody).subscribe(() => {
+
+                    // Close the details
+                    this.closeDetails();
+                });
+            }
+        });
     }
 }

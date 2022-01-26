@@ -5,13 +5,13 @@ import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import {
     InventoryPagination,
     CustomerObject
-} from 'app/modules/app/ports/inventory/ports.types';
+} from 'app/modules/app/fees/inventory/fees.types';
 import {environment} from '../../../../../environments/environment.prod';
 
 @Injectable({
     providedIn: 'root'
 })
-export class PortsService
+export class FeesService
 {
     // Private
     private _pagination: BehaviorSubject<InventoryPagination | null> = new BehaviorSubject(null);
@@ -78,7 +78,7 @@ export class PortsService
             }
         };
 
-        return this._httpClient.post<any>(environment.apiUrl + '/ports', body
+        return this._httpClient.post<any>(environment.apiUrl + '/fees', body
         // return this._httpClient.get<{ pagination: InventoryPagination; customers: CustomerObject[] }>('api/apps/ecommerce/inventory/customers', {
         //     params: {
         //         page: '' + page,
@@ -92,7 +92,7 @@ export class PortsService
             tap((response) => {
                 console.log(response);
                 this._pagination.next(response.pagination ? response.pagination : 5);
-                this._customers.next(response.body.ports);
+                this._customers.next(response.body.fees);
             })
         );
     }
@@ -107,7 +107,7 @@ export class PortsService
             map((products) => {
 
                 // Find the product
-                const product = products.find(item => item.portId === parseInt(id, 10)) || null;
+                const product = products.find(item => item.feeId === parseInt(id, 10)) || null;
 
                 // Update the product
                 this._customer.next(product);
@@ -164,7 +164,7 @@ export class PortsService
                 map((updatedProduct) => {
 
                     // Find the index of the updated product
-                    const index = products.findIndex(item => item.portId === parseInt(id, 10));
+                    const index = products.findIndex(item => item.feeId === parseInt(id, 10));
 
                     // Update the product
                     products[index] = updatedProduct;
@@ -177,7 +177,7 @@ export class PortsService
                 }),
                 switchMap(updatedProduct => this.customer$.pipe(
                     take(1),
-                    filter(item => item && item.portId === parseInt(id, 10)),
+                    filter(item => item && item.feeId === parseInt(id, 10)),
                     tap(() => {
 
                         // Update the product if it's selected
@@ -204,7 +204,7 @@ export class PortsService
                 map((isDeleted: boolean) => {
 
                     // Find the index of the deleted product
-                    const index = products.findIndex(item => item.portId === parseInt(id, 10));
+                    const index = products.findIndex(item => item.feeId === parseInt(id, 10));
 
                     // Delete the product
                     products.splice(index, 1);
